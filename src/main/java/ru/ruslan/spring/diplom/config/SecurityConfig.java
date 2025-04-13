@@ -1,56 +1,53 @@
 package ru.ruslan.spring.diplom.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+import ru.ruslan.spring.diplom.service.MyUserDetailService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final MyUserDetailService myUserDetailService;
 
+    @Autowired
+    public SecurityConfig(MyUserDetailService myUserDetailService) {
+        this.myUserDetailService = myUserDetailService;
+    }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+        //return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        String[] allowed = {"/swagger-ui/**", "/login", "/", "/swApi"};
+
         http
-                // Completely disable CSRF protection for Swagger and other public endpoints
-                .csrf(AbstractHttpConfigurer::disable)
-
-                // Configure authorization
-                .authorizeHttpRequests(authorize -> authorize
-                        // Permit all access to Swagger and related endpoints
-                        .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/v3/api-docs",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/swagger-resources/**",
-                                "/webjars/**",
-                                "/swApi/**",
-                                "/error"
-                        ).permitAll()
-
-                        // Optionally, add any other public endpoints here
-                        // .requestMatchers("/public/**").permitAll()
-
-                        // All other requests require authentication
-                        .anyRequest().authenticated()
-                )
-
-                // Configure authentication method
-                .httpBasic(Customizer.withDefaults())
-
-                // Optional: If you're using form login
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                /*.requestMatchers("/", "/login","/login/**","/login/*.html", "/logout", "/api/register/**", "/register/**", "/admin/register","/admin/register/**", "/admin/register/*.html").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/static/**", "/*.html", "/admin/*.html", "/swApi").permitAll()*/
+                   // .requestMatchers(allowed).permitAll()
+                .anyRequest().permitAll()
+            )
+            /*.formLogin(form -> form
+                .loginPage("/login/index.html")
+                .loginProcessingUrl("/login/index.html")
+                .defaultSuccessUrl("/admin/dashboard", true)
+                .permitAll()
+            )*/
                 .formLogin(Customizer.withDefaults());
 
         return http.build();

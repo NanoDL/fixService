@@ -3,12 +3,11 @@ package ru.ruslan.spring.diplom.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.ruslan.spring.diplom.model.User;
+import ru.ruslan.spring.diplom.model.MyUser;
 import ru.ruslan.spring.diplom.dto.UserDTO;
-import ru.ruslan.spring.diplom.service.UserService;
+import ru.ruslan.spring.diplom.service.MyUserService;
 
 import java.util.List;
 
@@ -17,31 +16,37 @@ import java.util.List;
 @Tag(name = "Пользователи", description = "Управление пользователями")
 public class UserController {
 
-    private UserService userService;
+    private MyUserService myUserService;
     private ModelMapper modelMapper;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper) {
-        this.userService = userService;
+    public UserController(MyUserService myUserService, ModelMapper modelMapper) {
+        this.myUserService = myUserService;
         this.modelMapper = modelMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll(){
-        return ResponseEntity.ok(userService.findAll());
+    public List<MyUser> getAll(){
+        return myUserService.findAll();
     }
+
+    @GetMapping("/{id}")
+    public UserDTO getUserById(@PathVariable Long id){
+        return convertUserToDTO(myUserService.getUserById(id));
+    }
+
 
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody @Validated UserDTO user) {
-        return ResponseEntity.ok(userService.save(convertDTOToUser(user)));
+    public MyUser addUser(@RequestBody @Validated UserDTO user){
+        return myUserService.save(convertDTOToUser(user));
     }
 
-    private UserDTO convertUserToDTO(User user){
-        return modelMapper.map(user, UserDTO.class);
+    private UserDTO convertUserToDTO(MyUser myUser){
+        return modelMapper.map(myUser, UserDTO.class);
     }
 
-    private User convertDTOToUser(UserDTO userDTO){
-        User user = modelMapper.map(userDTO, User.class);
-        return user;
+    private MyUser convertDTOToUser(UserDTO userDTO){
+        MyUser myUser = modelMapper.map(userDTO, MyUser.class);
+        return myUser;
     }
 }

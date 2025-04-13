@@ -1,11 +1,15 @@
 package ru.ruslan.spring.diplom.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import ru.ruslan.spring.diplom.enums.DeviceType;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -17,6 +21,7 @@ public class Firmware {
     private Long id;
     
     @Column(nullable = false)
+    @NotBlank
     private String name;
     
     @Column(columnDefinition = "TEXT")
@@ -25,7 +30,8 @@ public class Firmware {
     private String version;
     
     @Column(name = "device_type")
-    private String deviceType;
+    @Enumerated(value = EnumType.STRING)
+    private DeviceType deviceType;
     
     private String manufacturer;
     
@@ -45,6 +51,10 @@ public class Firmware {
     private Date uploadDate;
     
     @ManyToOne
-    @JoinColumn(name = "master_id")
-    private Master uploadedBy;
+    @JoinColumn(name = "upload_user_id")
+    private MyUser uploadedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "update_user_id")
+    private MyUser updatedBy;
 }

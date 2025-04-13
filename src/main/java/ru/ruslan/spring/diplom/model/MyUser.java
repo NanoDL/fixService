@@ -2,6 +2,7 @@ package ru.ruslan.spring.diplom.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
@@ -13,22 +14,25 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "users")
-public class User {
+public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
     @NotEmpty
+    @NotBlank
     private String username;
 
     @Column(nullable = false)
     @NotEmpty
+    @NotBlank
     private String password;
 
     @Column(unique = true, nullable = false)
     @Email
     @NotEmpty
+    @NotBlank
     private String email;
 
     @Enumerated(EnumType.STRING)

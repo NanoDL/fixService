@@ -1,9 +1,12 @@
 package ru.ruslan.spring.diplom.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import ru.ruslan.spring.diplom.enums.DeviceType;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -15,11 +18,13 @@ public class DeviceModel {
     private Long id;
     
     @Column(nullable = false)
+    @NotBlank
     private String name;
     
     private String manufacturer;
     
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private DeviceType type;
     
     @ManyToMany(mappedBy = "compatibleDevices")
     private List<Firmware> compatibleFirmwares;

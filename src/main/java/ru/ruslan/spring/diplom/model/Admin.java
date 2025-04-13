@@ -12,9 +12,9 @@ public class Admin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
-    private User user;
+    private MyUser myUser;
 
     @Column(nullable = false)
     private String firstName;
@@ -25,7 +25,7 @@ public class Admin {
     @Column(length = 1000)
     private String notes;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private LocalDateTime lastLoginAt;
 
     @Column(nullable = false)
