@@ -18,10 +18,9 @@ import ru.ruslan.spring.diplom.service.AdminService;
 import ru.ruslan.spring.diplom.service.CustomerService;
 import ru.ruslan.spring.diplom.service.MyUserService;
 
-@RestController
-@RequestMapping
+
 public class HelloController {
-    @Autowired
+
     private MyUserService myUserService;
 
     @GetMapping

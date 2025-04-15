@@ -1,0 +1,166 @@
+// Главный файл стилей
+@use 'sass:color';
+@use 'variables' as *;
+
+// Bootstrap
+@use '~bootstrap/scss/bootstrap';
+
+// Компоненты
+@use 'components/header';
+// @use 'components/footer';
+@use 'components/buttons';
+@use 'components/home';
+@use 'components/registration';
+
+// Общие стили
+body {
+  font-family: $font-family-base;
+  color: $body-color;
+}
+
+img {
+  max-width: 100%;
+}
+
+section {
+  padding: 5rem 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: $headings-font-weight;
+}
+
+.navbar-scrolled {
+  background-color: #fff;
+  box-shadow: $box-shadow-sm;
+}
+
+// Утилиты
+.highlight {
+  color: $primary;
+}
+
+.shadow-custom {
+  box-shadow: $box-shadow;
+}
+
+.text-muted {
+  color: $text-muted;
+}
+
+.rounded-custom {
+  border-radius: $border-radius;
+}
+
+// Переменные и миксины
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #0dcaf0;
+  --dark-color: #212529;
+  --light-color: #f8f9fa;
+  --gray-color: #6c757d;
+  --border-radius: 0.5rem;
+  --transition: all 0.3s ease;
+}
+
+// Общие стили
+body {
+  font-family: 'Inter', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--dark-color);
+  overflow-x: hidden;
+  position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+  transition: var(--transition);
+  
+  &:hover {
+    color: darken(#0d6efd, 10%);
+  }
+}
+
+.btn {
+  border-radius: $btn-border-radius;
+  padding: $btn-padding-y $btn-padding-x;
+  font-weight: $btn-font-weight;
+  transition: $transition-base;
+  
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+  
+  &:hover {
+    background-color: darken($primary, 5%);
+    border-color: darken($primary, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba($primary, 0.2);
+  }
+}
+
+.btn-outline-primary {
+  color: $primary;
+  border-color: $primary;
+  
+  &:hover {
+    background-color: $primary;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba($primary, 0.2);
+  }
+}
+
+.btn-lg {
+  padding: 0.75rem 1.75rem;
+  font-size: 1.1rem;
+}
+
+.card {
+  border-radius: $card-border-radius;
+  border: none;
+  box-shadow: $card-box-shadow;
+  transition: $transition-base;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $box-shadow;
+  }
+}
+
+// Утилиты
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.shadow {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+.rounded {
+  border-radius: var(--border-radius) !important;
+}
+
+.rounded-lg {
+  border-radius: calc(var(--border-radius) * 2) !important;
+}
+
+.text-gradient {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} 

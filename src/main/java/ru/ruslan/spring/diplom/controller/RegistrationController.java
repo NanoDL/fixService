@@ -2,6 +2,7 @@ package ru.ruslan.spring.diplom.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,36 +15,51 @@ import ru.ruslan.spring.diplom.dto.MasterRegistrationDto;
 import ru.ruslan.spring.diplom.model.Admin;
 import ru.ruslan.spring.diplom.model.Customer;
 import ru.ruslan.spring.diplom.model.Master;
+import ru.ruslan.spring.diplom.security.JWTUtil;
 import ru.ruslan.spring.diplom.service.AdminRegistrationService;
 import ru.ruslan.spring.diplom.service.CustomerRegistrationService;
 import ru.ruslan.spring.diplom.service.MasterRegistrationService;
 
-@RestController
-@RequestMapping("/api/register")
-@RequiredArgsConstructor
+import java.util.Map;
+
+
 public class RegistrationController {
-    
-    private final CustomerRegistrationService customerRegistrationService;
+
+    /*private final CustomerRegistrationService customerRegistrationService;
     private final MasterRegistrationService masterRegistrationService;
     private final AdminRegistrationService adminRegistrationService;
+    private final JWTUtil jwtUtil;
+
+    @Autowired
+    public RegistrationController(CustomerRegistrationService customerRegistrationService, MasterRegistrationService masterRegistrationService, AdminRegistrationService adminRegistrationService, JWTUtil jwtUtil) {
+        this.customerRegistrationService = customerRegistrationService;
+        this.masterRegistrationService = masterRegistrationService;
+        this.adminRegistrationService = adminRegistrationService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @PostMapping("/customer")
-    public ResponseEntity<Customer> registerCustomer(@Valid @RequestBody CustomerRegistrationDto dto) {
+    public Map<String, String> registerCustomer(@Valid @RequestBody CustomerRegistrationDto dto) {
         Customer customer = customerRegistrationService.registerCustomer(dto);
-        return ResponseEntity.ok(customer);
+        String token = jwtUtil.generateToken(dto.getUsername());
+        return Map.of("jwt-token", token);
     }
 
     @PostMapping("/master")
-    public ResponseEntity<Master> registerMaster(@Valid @RequestBody MasterRegistrationDto dto) {
+    public Map<String, String> registerMaster(@Valid @RequestBody MasterRegistrationDto dto) {
 
         Master master = masterRegistrationService.registerMaster(dto);
+        String token = jwtUtil.generateToken(dto.getUsername());
 
-        return ResponseEntity.ok(master);
+        return Map.of("jwt-token", token);
     }
+
     @PostMapping("/admin")
-    public ResponseEntity<Admin> registerAdmin(@Valid @RequestBody AdminRegistrationDto dto) {
+    public Map<String, String> registerAdmin(@Valid @RequestBody AdminRegistrationDto dto) {
         Admin admin = adminRegistrationService.registerAdmin(dto);
+        String token = jwtUtil.generateToken(dto.getUsername());
 
-        return ResponseEntity.ok(admin);
-    }
+        return Map.of("jwt-token", token);
+    }*/
+
 }

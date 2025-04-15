@@ -1,0 +1,138 @@
+// Header styles
+
+@use '../variables' as *;
+@use "sass:color";
+
+.navbar {
+  padding: 1rem 0;
+  transition: $transition-base;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+
+  &.scrolled {
+    background-color: #fff;
+    box-shadow: $box-shadow-sm;
+    padding: 0.5rem 0;
+  }
+
+  .navbar-brand {
+    font-weight: $font-weight-bold;
+    font-size: 1.4rem;
+    padding: 0;
+
+    .brand-text {
+      font-size: 1.4rem;
+      color: $primary;
+      font-weight: 700;
+    }
+  }
+
+  .navbar-nav {
+    margin-left: auto;
+  }
+
+  .nav-item {
+    margin: 0 0.25rem;
+  }
+
+  .nav-link {
+    color: $gray-800;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    position: relative;
+    transition: $transition-base;
+
+    &:hover, 
+    &.active {
+      color: $primary;
+    }
+
+    &.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 1rem;
+      right: 1rem;
+      height: 2px;
+      background-color: $primary;
+    }
+    
+    &.btn {
+      padding: 0.4rem 1.2rem;
+      border-radius: $border-radius;
+      
+      &.login-btn {
+        border: 1px solid $primary;
+        margin-right: 0.5rem;
+        
+        &:hover {
+          background-color: $primary;
+          color: #fff;
+        }
+      }
+      
+      &.signup-btn {
+        background-color: $primary;
+        color: #fff;
+        
+        &:hover {
+          background-color: darken($primary, 10%);
+        }
+      }
+    }
+  }
+
+  // Мобильная навигация
+  .navbar-toggler {
+    border: none;
+    padding: 0.25rem 0.5rem;
+    font-size: 1.25rem;
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(13, 110, 253, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  // Адаптивность для мобильных устройств
+  @media (max-width: 991.98px) {
+    .navbar {
+      padding: 0.75rem 0;
+      
+      .navbar-collapse {
+        background-color: #fff;
+        padding: 1rem;
+        border-radius: $border-radius;
+        margin-top: 0.5rem;
+        box-shadow: $box-shadow-sm;
+      }
+      
+      .nav-item {
+        margin: 0.5rem 0;
+        
+        .nav-link {
+          padding: 0.5rem 0;
+          
+          &.active::after {
+            left: 0;
+            right: 0;
+          }
+          
+          &.btn {
+            display: inline-block;
+            margin-top: 0.5rem;
+          }
+        }
+      }
+    }
+    
+    body.menu-open {
+      overflow: hidden;
+    }
+  }
+} 

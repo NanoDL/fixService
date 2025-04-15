@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для мастеров - РемонтСервис</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Стили будут подключены автоматически через WebPack -->
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <span class="brand-text">РемонтСервис</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/services">Услуги</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/masters">Мастерам</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/customers">Заказчикам</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary login-btn" href="/login">Войти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary signup-btn" href="/register">Регистрация</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Главный экран -->
+    <section class="hero-section masters-hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">Зарабатывайте на ремонте техники с нами</h1>
+                    <p class="hero-subtitle">Присоединяйтесь к нашей платформе и получайте стабильный поток заказов от клиентов, нуждающихся в ваших услугах</p>
+                    <div class="hero-buttons">
+                        <a href="/register/master" class="btn btn-primary btn-lg me-3">Стать мастером</a>
+                        <a href="#benefits" class="btn btn-outline-primary btn-lg">Узнать больше</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image-container">
+                        <img src="../assets/images/master-hero.jpg" alt="Мастер по ремонту" class="hero-image">
+                        <div class="hero-shape"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Преимущества для мастеров -->
+    <section id="benefits" class="benefits-section py-5">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Преимущества для мастеров</h2>
+                <p class="section-subtitle">Почему стоит присоединиться к нашей платформе</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <h3 class="benefit-title">Стабильный поток заказов</h3>
+                        <p class="benefit-text">Получайте заявки от клиентов из вашего города без затрат на рекламу и поиск клиентов</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+                        <h3 class="benefit-title">Достойный заработок</h3>
+                        <p class="benefit-text">Устанавливайте свои цены на услуги и получайте оплату сразу после выполнения заказа</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <h3 class="benefit-title">Гибкий график</h3>
+                        <p class="benefit-text">Работайте когда вам удобно — вы сами выбираете заказы и время их выполнения</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Как это работает для мастеров -->
+    <section class="how-it-works-section masters-flow">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Как начать работу</h2>
+                <p class="section-subtitle">Простой процесс начала сотрудничества с нами</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="process-card">
+                        <div class="process-icon">
+                            <i class="bi bi-person-plus"></i>
+                        </div>
+                        <div class="process-number">01</div>
+                        <h3 class="process-title">Регистрация</h3>
+                        <p class="process-text">Создайте аккаунт мастера, укажите свою специализацию и опыт работы</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="process-card">
+                        <div class="process-icon">
+                            <i class="bi bi-patch-check"></i>
+                        </div>
+                        <div class="process-number">02</div>
+                        <h3 class="process-title">Верификация</h3>
+                        <p class="process-text">Пройдите простую проверку для подтверждения ваших навыков и квалификации</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="process-card">
+                        <div class="process-icon">
+                            <i class="bi bi-list-task"></i>
+                        </div>
+                        <div class="process-number">03</div>
+                        <h3 class="process-title">Получение заказов</h3>
+                        <p class="process-text">Просматривайте заявки от клиентов и отправляйте свои предложения</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="process-card">
+                        <div class="process-icon">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
+                        <div class="process-number">04</div>
+                        <h3 class="process-title">Оплата</h3>
+                        <p class="process-text">Выполняйте заказы и получайте оплату удобным для вас способом</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Специализации -->
+    <section class="specializations-section py-5">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Востребованные специализации</h2>
+                <p class="section-subtitle">Мы ищем мастеров по ремонту различной техники</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="specialization-card">
+                        <div class="specialization-icon">
+                            <i class="bi bi-phone"></i>
+                        </div>
+                        <h3 class="specialization-title">Смартфоны и планшеты</h3>
+                        <ul class="specialization-list">
+                            <li><i class="bi bi-check-circle"></i> Замена экранов и батарей</li>
+                            <li><i class="bi bi-check-circle"></i> Ремонт после воды</li>
+                            <li><i class="bi bi-check-circle"></i> Замена разъемов</li>
+                            <li><i class="bi bi-check-circle"></i> Восстановление данных</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="specialization-card">
+                        <div class="specialization-icon">
+                            <i class="bi bi-laptop"></i>
+                        </div>
+                        <h3 class="specialization-title">Ноутбуки и компьютеры</h3>
+                        <ul class="specialization-list">
+                            <li><i class="bi bi-check-circle"></i> Ремонт материнских плат</li>
+                            <li><i class="bi bi-check-circle"></i> Замена комплектующих</li>
+                            <li><i class="bi bi-check-circle"></i> Обслуживание систем охлаждения</li>
+                            <li><i class="bi bi-check-circle"></i> Настройка программного обеспечения</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="specialization-card">
+                        <div class="specialization-icon">
+                            <i class="bi bi-tv"></i>
+                        </div>
+                        <h3 class="specialization-title">Телевизоры и мониторы</h3>
+                        <ul class="specialization-list">
+                            <li><i class="bi bi-check-circle"></i> Ремонт подсветки</li>
+                            <li><i class="bi bi-check-circle"></i> Замена матрицы</li>
+                            <li><i class="bi bi-check-circle"></i> Ремонт блоков питания</li>
+                            <li><i class="bi bi-check-circle"></i> Настройка и обновление</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <p class="other-specialists">Также нам нужны мастера по ремонту бытовой техники, игровых консолей, фото/видео техники и аудиосистем</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Вопросы и ответы -->
+    <section class="faq-section py-5">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Часто задаваемые вопросы</h2>
+                <p class="section-subtitle">Ответы на популярные вопросы от мастеров</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Сколько стоит регистрация и работа на платформе?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Регистрация на платформе абсолютно бесплатна. Мы взимаем только комиссию с выполненных заказов в размере 10% от суммы заказа. Никаких ежемесячных платежей или скрытых комиссий нет.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Как происходит оплата за выполненные заказы?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    После завершения заказа и его подтверждения клиентом, средства поступают на ваш баланс на платформе за вычетом комиссии сервиса. Вы можете вывести их любым удобным способом: на банковскую карту, электронный кошелек или мобильный телефон.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Какие документы нужны для регистрации мастером?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Для регистрации вам понадобятся: паспорт гражданина РФ, ИНН, СНИЛС. Если вы планируете работать как ИП или самозанятый, потребуются соответствующие документы. Также желательно иметь сертификаты о профессиональном образовании или курсах повышения квалификации в вашей сфере.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    Что делать, если клиент отказывается платить за выполненную работу?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    На нашей платформе действует система безопасных сделок. Клиент резервирует оплату перед началом работ, и вы получаете её после подтверждения выполнения. В случае спорных ситуаций наш арбитраж рассматривает обращения от обеих сторон и принимает справедливое решение в течение 24 часов.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    Могу ли я отказаться от заказа?
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Да, вы можете отказаться от заказа до его принятия в работу без каких-либо последствий. Если заказ уже принят, но не начат, отказ возможен с обоснованием причины. Частые немотивированные отказы от принятых заказов могут повлиять на ваш рейтинг на платформе.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Призыв к действию -->
+    <section class="cta-section py-5">
+        <div class="container">
+            <div class="cta-card">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h2 class="cta-title">Начните зарабатывать уже сегодня!</h2>
+                        <p class="cta-text">Присоединяйтесь к сообществу профессиональных мастеров и получайте заказы от клиентов в вашем городе</p>
+                    </div>
+                    <div class="col-lg-4 text-center text-lg-end mt-4 mt-lg-0">
+                        <a href="/register/master" class="btn btn-primary btn-lg">Стать мастером</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">
+                        <span class="footer-brand-text">РемонтСервис</span>
+                    </div>
+                    <p class="footer-description">Удобная платформа для поиска квалифицированных мастеров, которые быстро и качественно отремонтируют вашу технику</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="bi bi-telegram"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-vk"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Платформа</h5>
+                    <ul class="footer-links">
+                        <li><a href="/about">О нас</a></li>
+                        <li><a href="/masters">Мастерам</a></li>
+                        <li><a href="/customers">Заказчикам</a></li>
+                        <li><a href="/pricing">Тарифы</a></li>
+                        <li><a href="/partners">Партнерам</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Поддержка</h5>
+                    <ul class="footer-links">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/support">Поддержка</a></li>
+                        <li><a href="/knowledge-base">База знаний</a></li>
+                        <li><a href="/privacy">Политика конфиденциальности</a></li>
+                        <li><a href="/terms">Условия использования</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-heading">Контакты</h5>
+                    <ul class="footer-contact">
+                        <li><i class="bi bi-geo-alt"></i> г. Москва, ул. Примерная, д. 123</li>
+                        <li><i class="bi bi-telephone"></i> 8 (800) 123-45-67</li>
+                        <li><i class="bi bi-envelope"></i> info@remontservice.ru</li>
+                    </ul>
+                    <div class="footer-app-badges">
+                        <a href="#" class="app-badge"><img src="../assets/images/app-store-badge.png" alt="App Store"></a>
+                        <a href="#" class="app-badge"><img src="../assets/images/google-play-badge.png" alt="Google Play"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="copyright">© 2023 РемонтСервис. Все права защищены.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="footer-payment">
+                            <span>Принимаем к оплате:</span>
+                            <i class="bi bi-credit-card"></i>
+                            <i class="bi bi-wallet2"></i>
+                            <i class="bi bi-bank"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Скрипты будут подключены автоматически через WebPack -->
+</body>
+</html> 
