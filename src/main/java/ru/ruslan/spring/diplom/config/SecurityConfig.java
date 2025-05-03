@@ -9,6 +9,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,6 +28,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final MyUserDetailService myUserDetailService;
@@ -45,22 +48,28 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        String[] allowed = {"/v3/api-docs/swagger-config", "/v3/api-docs", "/swagger-ui/**", "/api/login/**","/api/login", "/", "/*", "/swApi", "/logout", "/api/register/**"};
+        String[] allowed = {"/v3/api-docs/swagger-config", "/v3/api-docs", "/swagger-ui/**", "/", "/*", "/swApi", "/logout", "/api/auth/**"};
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http
 
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+                    corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    corsConfiguration.setAllowedHeaders(List.of("*"));
+                    corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+                    corsConfiguration.setExposedHeaders(List.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
                     corsConfiguration.setAllowCredentials(true);
+                    corsConfiguration.setMaxAge(3600L);
                     return corsConfiguration;
                 }))
 
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(allowed).permitAll()
+                    .requestMatchers("/api/users").hasRole("ADMIN")
+                    .requestMatchers("/api/firmwares/**").hasAnyRole("MASTER", "ADMIN")
+
+
                 .anyRequest().authenticated()
             )
             /*.formLogin(form -> form

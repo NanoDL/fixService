@@ -29,6 +29,11 @@ public class MyUserService {
         return user.orElseThrow(UserNotFoundException::new);
     }
 
+    public MyUser findUserByUsername(String username){
+        Optional<MyUser> user = Optional.ofNullable(myUserRepository.findByUsername(username));
+        return  user.orElseThrow(UserNotFoundException::new);
+    }
+
     public MyUser getUserFromContext(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

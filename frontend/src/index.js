@@ -1,18 +1,32 @@
 // Главный входной файл
 import './styles/main.scss';
 import $ from 'jquery';
-import { initTooltips, initPopovers, initLazyLoading, initSmoothScrolling } from './scripts/common.js';
+import { initTooltips, initPopovers, initLazyLoading, initSmoothScrolling, loadHeader } from './scripts/common.js';
+import { initProfile } from './scripts/profile.js';
+import { initNavigation } from './scripts/navigation.js';
+
+// Добавляем обработчик событий для отладки
+document.addEventListener('headerLoaded', () => {
+  console.log('Событие headerLoaded сработало');
+});
 
 // Инициализация общих компонентов при загрузке DOM
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM загружен, начинаем инициализацию компонентов');
+  
+  // Загрузка хедера
+  loadHeader();
+  
   // Инициализация общих компонентов
   initTooltips();
   initPopovers();
   initLazyLoading();
   initSmoothScrolling();
+  initNavigation(); // Инициализация навигации
   
   // Ждем загрузки документа
   $(document).ready(function() {
+    console.log('jQuery ready сработал');
     // Анимация шапки при прокрутке
     $(window).scroll(function() {
       if ($(window).scrollTop() > 50) {

@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.ruslan.spring.diplom.dto.OrderRequestDto;
 import ru.ruslan.spring.diplom.dto.OrderResponseDto;
 import ru.ruslan.spring.diplom.enums.OrderStatus;
 import ru.ruslan.spring.diplom.enums.UserRole;
@@ -40,7 +41,22 @@ public class OrderService {
         return orderRepository.save(order);
     }
     @Transactional
-    public Order updateOrder(Order order) {
+    public Order updateOrder(Long id, OrderRequestDto dto) {
+        Order order = findById(id);
+        order.setRepairType(dto.getRepairType());
+        order.setPrice(dto.getPrice());
+        order.setDescription(dto.getDescription());
+        return orderRepository.save(order);
+    }
+
+    @Transactional
+    public Order acceptOrder(MyUser user, Long id){
+        Order order = findById(id);
+        Master master = masterRepository.findByMyUser(user).orElseThrow(()-> new RuntimeException("Нет такого мастера"));
+
+        order.setMaster(master);
+        order.setStatus(OrderStatus.ACCEPTED);
+
         return orderRepository.save(order);
     }
 
@@ -80,6 +96,15 @@ public class OrderService {
             newOrderList.add(modelMapper.map(order, OrderResponseDto.class));
         }
         return newOrderList;
+    }
+
+    public OrderResponseDto findAvailableOrderById(Long id){
+        Order order = findById(id);
+        if (order.getStatus().name() != "NEW"){
+            throw new RuntimeException("Этот заказ уже не доступен");
+        }
+        return modelMapper.map(order, OrderResponseDto.class);
+
     }
 
 

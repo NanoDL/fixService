@@ -1,5 +1,6 @@
 // Стили кнопок
 @use '../variables' as *;
+@use "sass:color";
 
 .btn {
   border-radius: $border-radius;
@@ -17,8 +18,8 @@
   border-color: $primary;
   
   &:hover {
-    background-color: darken($primary, 10%);
-    border-color: darken($primary, 10%);
+    background-color: color.adjust($primary, $lightness: -10%);
+    border-color: color.adjust($primary, $lightness: -10%);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba($primary, 0.2);
   }
@@ -41,8 +42,8 @@
   border-color: $secondary;
   
   &:hover {
-    background-color: darken($secondary, 10%);
-    border-color: darken($secondary, 10%);
+    background-color: color.adjust($secondary, $lightness: -10%);
+    border-color: color.adjust($secondary, $lightness: -10%);
     transform: translateY(-2px);
   }
 }

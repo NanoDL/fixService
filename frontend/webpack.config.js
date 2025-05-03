@@ -13,8 +13,14 @@ module.exports = (env, argv) => {
         entry: {
             main: './src/index.js',
             masters: './src/pages/masters/masters.js',
+            register: './src/pages/register/register.js',
             registerMaster: './src/pages/register/master/register-master.js',
-            registerCustomer: './src/pages/register/customer/register-customer.js'
+            registerCustomer: './src/pages/register/customer/register-customer.js',
+            login: './src/pages/login/login.js',
+            profile: './src/pages/profile/profile.js',
+            createOrder: './src/pages/orders/create-order.js',
+            myOrders: './src/pages/orders/my/my-orders.js',
+            devices: './src/pages/devices/devices.js'
         },
         output: {
             path: path.resolve(__dirname, 'dist'),
@@ -31,11 +37,25 @@ module.exports = (env, argv) => {
             historyApiFallback: {
                 rewrites: [
                     { from: /^\/masters/, to: '/masters/index.html' },
+                    { from: /^\/register$/, to: '/register/index.html' },
                     { from: /^\/register\/master/, to: '/register/master/index.html' },
                     { from: /^\/register\/customer/, to: '/register/customer/index.html' },
-                    { from: /./, to: '/index.html' }
+                    { from: /^\/orders\/my/, to: '/orders/my/index.html' },
+                    { from: /^\/orders/, to: '/orders/index.html' },
+                    { from: /^\/devices/, to: '/devices/index.html' },
+                    { from: /./, to: '/index.html' },
+                    { from: /\/login/, to: '/login/index.html'},
+                    { from: /\/profile/, to: '/profile/index.html'}
                 ]
             },
+            proxy: [
+                {
+                    context: ['/api'],
+                    target: 'http://localhost:8070',
+                    secure: false,
+                    changeOrigin: true
+                }
+            ],
             open: true
         },
         module: {
@@ -97,6 +117,11 @@ module.exports = (env, argv) => {
                 'window.jQuery': 'jquery',
                 'window.$': 'jquery',
             }),
+            // Добавляем DefinePlugin для передачи переменных окружения
+            new webpack.DefinePlugin({
+                'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+                'process.env.API_URL': JSON.stringify(isProduction ? '' : 'http://localhost:8070')
+            }),
             new MiniCssExtractPlugin({
                 filename: isProduction ? 'styles/[name].[contenthash].css' : 'styles/[name].css',
             }),
@@ -113,6 +138,12 @@ module.exports = (env, argv) => {
                 inject: true
             }),
             new HtmlWebpackPlugin({
+                template: './src/pages/register/index.html',
+                filename: 'register/index.html',
+                chunks: ['register'],
+                inject: true
+            }),
+            new HtmlWebpackPlugin({
                 template: './src/pages/register/master/index.html',
                 filename: 'register/master/index.html',
                 chunks: ['registerMaster'],
@@ -124,11 +155,49 @@ module.exports = (env, argv) => {
                 chunks: ['registerCustomer'],
                 inject: true
             }),
+            new HtmlWebpackPlugin({
+                template: './src/pages/login/index.html',
+                filename: 'login/index.html',
+                chunks: ['login'],
+                inject: true
+            }),
+            new HtmlWebpackPlugin({
+                template: './src/pages/profile/index.html',
+                filename: 'profile/index.html',
+                chunks: ['profile'],
+                inject: true
+            }),
+            new HtmlWebpackPlugin({
+                template: './src/pages/orders/index.html',
+                filename: 'orders/index.html',
+                chunks: ['createOrder'],
+                inject: true
+            }),
+            new HtmlWebpackPlugin({
+                template: './src/pages/orders/my/index.html',
+                filename: 'orders/my/index.html',
+                chunks: ['myOrders'],
+                inject: true
+            }),
+            new HtmlWebpackPlugin({
+                template: './src/pages/devices/index.html',
+                filename: 'devices/index.html',
+                chunks: ['devices'],
+                inject: true
+            }),
             new CopyWebpackPlugin({
                 patterns: [
                     {
                         from: 'src/assets',
                         to: 'assets'
+                    },
+                    {
+                        from: 'src/components/header',
+                        to: 'components/header'
+                    },
+                    {
+                        from: 'src/components',
+                        to: 'components'
                     }
                 ],
             }),

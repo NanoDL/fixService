@@ -51,7 +51,6 @@
     &.active::after {
       content: '';
       position: absolute;
-      bottom: -2px;
       left: 1rem;
       right: 1rem;
       height: 2px;
@@ -77,8 +76,14 @@
         color: #fff;
         
         &:hover {
-          background-color: darken($primary, 10%);
+          background-color: color.adjust($primary, $lightness: -10%);
         }
+      }
+
+      // Исправление для активных состояний кнопок, чтобы цвет текста не "заплывал"
+      &.login-btn.active,
+      &.signup-btn.active {
+        color: #fff !important;
       }
     }
   }

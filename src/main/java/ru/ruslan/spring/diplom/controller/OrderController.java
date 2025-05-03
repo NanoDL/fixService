@@ -4,12 +4,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.ruslan.spring.diplom.dto.CreateOrderDto;
+import ru.ruslan.spring.diplom.dto.OrderDto;
+import ru.ruslan.spring.diplom.dto.OrderRequestDto;
 import ru.ruslan.spring.diplom.dto.OrderResponseDto;
 import ru.ruslan.spring.diplom.enums.OrderStatus;
 import ru.ruslan.spring.diplom.enums.UserRole;
@@ -78,7 +81,7 @@ public class OrderController {
         return orderService.createNewOrder(order);
     }
 
-    @PutMapping("/{orderId}/status")
+    @PutMapping("/my/{orderId}/status")
     public OrderResponseDto updateStatus(@PathVariable Long orderId, @RequestBody OrderStatus orderStatus){
         MyUser user = myUserService.getUserFromContext();
         return orderService.updateStatus(user, orderId, orderStatus);
@@ -98,25 +101,17 @@ public class OrderController {
     public Order acceptOrder(@PathVariable Long orderId) {
         MyUser currentUser = myUserService.getUserFromContext();
 
-        if (currentUser.getRole() != UserRole.MASTER) {
-            throw new IllegalArgumentException("Только мастера могут принимать заказы");
-        }
-
-        Master master = masterService.findByUserId(currentUser.getId());
-        Order order = orderService.findById(orderId);
-
-        if (order.getStatus() != OrderStatus.NEW) {
-            throw new IllegalArgumentException("Заказ уже принят другим мастером");
-        }
-
-        order.setMaster(master);
-        order.setStatus(OrderStatus.ACCEPTED);
-        return orderService.updateOrder(order);
+        return orderService.acceptOrder(currentUser, orderId);
     }
 
     @GetMapping
     public List<OrderResponseDto> getNewOrdersForMaster(){
         return orderService.findAvailableOrders();
+    }
+
+    @GetMapping("/{id}")
+    public OrderResponseDto getMoreInformAboutAvailableOrder(@PathVariable Long id){
+        return orderService.findAvailableOrderById(id);
     }
 
 
@@ -151,7 +146,7 @@ public class OrderController {
         return orderService.findOrderByIdAndUser(currentUser, id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/my/{id}")
     @Operation(
         summary = "Удалить заказ",
         description = "Удаляет заказ по ID. Доступно только для владельца заказа"
@@ -166,5 +161,10 @@ public class OrderController {
         MyUser currentUser = myUserService.getUserFromContext();
         orderService.deleteOrder(currentUser, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/my/{id}")
+    public Order updateOrder(@RequestBody @Valid OrderRequestDto dto, @PathVariable Long id){
+        return orderService.updateOrder(id, dto);
     }
 }

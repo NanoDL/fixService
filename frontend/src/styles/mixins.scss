@@ -1,0 +1,113 @@
+// Миксины для переиспользования CSS стилей
+
+// Миксин для плавных переходов
+@mixin transition($property: all, $duration: 0.3s, $timing: ease) {
+  transition: $property $duration $timing;
+}
+
+// Миксин для flexbox
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+// Миксин для абсолютного позиционирования
+@mixin absolute($top: auto, $right: auto, $bottom: auto, $left: auto) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+
+// Миксин для тени
+@mixin box-shadow($shadow...) {
+  box-shadow: $shadow;
+}
+
+// Миксин для ограничения текста (текстовое многоточие)
+@mixin text-truncate($lines: 1) {
+  @if $lines == 1 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// Миксин для установки размеров элемента
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+// Миксин для установки отступов (padding)
+@mixin padding($top, $right: $top, $bottom: $top, $left: $right) {
+  padding: $top $right $bottom $left;
+}
+
+// Миксин для установки полей (margin)
+@mixin margin($top, $right: $top, $bottom: $top, $left: $right) {
+  margin: $top $right $bottom $left;
+}
+
+// Миксин для медиа-запросов
+@mixin media-breakpoint-up($breakpoint) {
+  @if $breakpoint == xs {
+    @media (min-width: 0) {
+      @content;
+    }
+  } @else if $breakpoint == sm {
+    @media (min-width: 576px) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (min-width: 768px) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (min-width: 992px) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (min-width: 1200px) {
+      @content;
+    }
+  } @else if $breakpoint == xxl {
+    @media (min-width: 1400px) {
+      @content;
+    }
+  }
+}
+
+// Миксин для использования Grid
+@mixin grid($columns: 1, $gap: 1rem) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+
+// Миксин для стилей кнопок
+@mixin button-variant($background, $color, $border: $background) {
+  background-color: $background;
+  color: $color;
+  border: 1px solid $border;
+  
+  &:hover {
+    background-color: darken($background, 7.5%);
+    border-color: darken($border, 10%);
+  }
+  
+  &:focus, &:active {
+    background-color: darken($background, 10%);
+    border-color: darken($border, 12.5%);
+    box-shadow: 0 0 0 0.2rem rgba($background, 0.25);
+  }
+} 

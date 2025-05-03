@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог устройств - РемонтСервис</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Стили будут подключены автоматически через WebPack -->
+</head>
+<body>
+    <!-- Навигация -->
+    <div id="headerContainer">
+        <!-- Сюда будет загружен хедер -->
+    </div>
+
+    <!-- Основной контент -->
+    <section class="devices-catalog-section py-5">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="text-center mb-4">Каталог устройств</h1>
+                    <p class="text-center text-muted">Выберите устройство для просмотра информации и доступных прошивок</p>
+                </div>
+            </div>
+
+            <!-- Фильтры -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <form id="device-filter-form" class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="deviceType" class="form-label">Тип устройства</label>
+                                    <select class="form-select" id="deviceType">
+                                        <option value="" selected>Все типы</option>
+                                        <!-- Список типов будет загружен из API -->
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="manufacturer" class="form-label">Производитель</label>
+                                    <select class="form-select" id="manufacturer">
+                                        <option value="" selected>Все производители</option>
+                                        <!-- Список производителей будет загружен из API -->
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="searchQuery" class="form-label">Поиск</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="searchQuery" placeholder="Название модели...">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Список устройств -->
+            <div class="row" id="devices-list">
+                <!-- Карточки устройств будут загружены из API -->
+                <!-- Шаблон карточки устройства -->
+                <div class="col-lg-4 col-md-6 mb-4 device-card-template d-none">
+                    <div class="card h-100 shadow-sm device-card">
+                        <div class="device-type-badge">
+                            <span class="badge bg-primary">Смартфон</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title device-name">iPhone 13</h5>
+                            <p class="card-text text-muted device-manufacturer">Apple</p>
+                            <div class="device-info">
+                                <p class="mb-2"><i class="bi bi-file-earmark-code me-2"></i><span class="firmware-count">5</span> доступных прошивок</p>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <div class="d-grid">
+                                <a href="#" class="btn btn-outline-primary view-device-btn">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Состояние загрузки -->
+            <div id="loading-state" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+                <p class="mt-2">Загрузка устройств...</p>
+            </div>
+
+            <!-- Пустое состояние -->
+            <div id="empty-state" class="text-center py-5 d-none">
+                <i class="bi bi-device-hdd display-1 text-muted"></i>
+                <h3 class="mt-3">Устройства не найдены</h3>
+                <p class="text-muted">Попробуйте изменить параметры поиска или добавьте новое устройство</p>
+                <a href="/devices/add" class="btn btn-primary mt-3">
+                    <i class="bi bi-plus-circle me-2"></i>Добавить устройство
+                </a>
+            </div>
+
+            <!-- Пагинация -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <nav aria-label="Навигация по страницам">
+                        <ul class="pagination justify-content-center" id="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">
+                        <span class="footer-brand-text">РемонтСервис</span>
+                    </div>
+                    <p class="footer-description">Удобная платформа для поиска квалифицированных мастеров, которые быстро и качественно отремонтируют вашу технику</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="bi bi-telegram"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-vk"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Платформа</h5>
+                    <ul class="footer-links">
+                        <li><a href="/about">О нас</a></li>
+                        <li><a href="/masters">Мастерам</a></li>
+                        <li><a href="/customers">Заказчикам</a></li>
+                        <li><a href="/pricing">Тарифы</a></li>
+                        <li><a href="/partners">Партнерам</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Информация</h5>
+                    <ul class="footer-links">
+                        <li><a href="/help">Помощь</a></li>
+                        <li><a href="/faq">Частые вопросы</a></li>
+                        <li><a href="/blog">Блог</a></li>
+                        <li><a href="/terms">Условия использования</a></li>
+                        <li><a href="/privacy">Политика конфиденциальности</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-heading">Контакты</h5>
+                    <ul class="footer-contacts">
+                        <li><i class="bi bi-telephone"></i> 8 (800) 123-45-67</li>
+                        <li><i class="bi bi-envelope"></i> info@remontservice.ru</li>
+                        <li><i class="bi bi-geo-alt"></i> Москва, ул. Примерная, д. 1</li>
+                    </ul>
+                    <div class="footer-app-buttons">
+                        <a href="#" class="btn btn-sm btn-outline-light mb-2"><i class="bi bi-apple me-2"></i>App Store</a>
+                        <a href="#" class="btn btn-sm btn-outline-light"><i class="bi bi-google me-2"></i>Google Play</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="copyright">© 2023 РемонтСервис. Все права защищены.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="payment-methods text-md-end">
+                            <span>Мы принимаем:</span>
+                            <i class="bi bi-credit-card"></i>
+                            <i class="bi bi-credit-card-2-front"></i>
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Скрипты будут подключены автоматически через WebPack -->
+</body>
+</html> 

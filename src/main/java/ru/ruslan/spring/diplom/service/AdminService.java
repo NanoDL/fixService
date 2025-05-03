@@ -21,6 +21,7 @@ public class AdminService {
     }
 
     public Admin findByMyUser(MyUser myUser) {
-        return adminRepository.findByMyUser(myUser);
+        return adminRepository.findByMyUser(myUser)
+                .orElseThrow(() -> new RuntimeException("Нет такого админа!"));
     }
 }

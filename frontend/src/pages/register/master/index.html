@@ -9,35 +9,9 @@
 </head>
 <body>
     <!-- Навигация -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <span class="brand-text">РемонтСервис</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Главная</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/services">Услуги</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/masters">Мастерам</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/customers">Заказчикам</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-outline-primary login-btn" href="/login">Войти</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div id="headerContainer">
+        <!-- Сюда будет загружен хедер -->
+    </div>
 
     <!-- Форма регистрации -->
     <section class="registration-section py-5">
@@ -47,65 +21,84 @@
                     <div class="registration-card">
                         <div class="registration-header text-center">
                             <h2 class="registration-title">Регистрация мастера</h2>
-                            <p class="registration-subtitle">Заполните форму, чтобы стать частью нашей команды мастеров</p>
+                            <p class="registration-subtitle">Заполните форму, чтобы присоединиться к нашей команде профессионалов</p>
                         </div>
+                        
+                        <!-- Прогресс регистрации -->
+                        <div class="registration-progress mb-4">
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2">
+                                <span class="progress-step active">Данные пользователя</span>
+                                <span class="progress-step">Профессиональная информация</span>
+                                <span class="progress-step">Завершение</span>
+                            </div>
+                        </div>
+                        
                         <form id="master-registration-form" class="registration-form">
-                            <!-- Личные данные -->
-                            <div class="form-section">
-                                <h3 class="form-section-title">Личные данные</h3>
+                            <!-- Данные пользователя -->
+                            <div class="form-section" id="personal-section">
+                                <h3 class="form-section-title">Данные пользователя</h3>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label for="firstName" class="form-label">Имя <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="firstName" name="firstName" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="lastName" class="form-label">Фамилия <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="lastName" name="lastName" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="phone" class="form-label">Телефон <span class="text-danger">*</span></label>
-                                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                                        <label for="username" class="form-label">Логин <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">@</span>
+                                            <input type="text" class="form-control" id="username" name="username" required>
+                                        </div>
+                                        <div class="form-text">Минимум 3 символа, максимум 50 символов</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                                         <input type="email" class="form-control" id="email" name="email" required>
                                     </div>
-                                    <div class="col-12">
-                                        <label for="address" class="form-label">Адрес</label>
-                                        <input type="text" class="form-control" id="address" name="address">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Данные аккаунта -->
-                            <div class="form-section">
-                                <h3 class="form-section-title">Данные аккаунта</h3>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="username" class="form-label">Логин <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="username" name="username" required>
-                                    </div>
                                     <div class="col-md-6">
                                         <label for="password" class="form-label">Пароль <span class="text-danger">*</span></label>
-                                        <input type="password" class="form-control" id="password" name="password" required>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="password" name="password" required>
+                                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-text">Минимум 6 символов</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="passwordConfirm" class="form-label">Подтверждение пароля <span class="text-danger">*</span></label>
-                                        <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" required>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" required>
+                                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="name" class="form-label">ФИО <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phoneNumber" class="form-label">Телефон <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                                        <div class="form-text">Формат: +7 (XXX) XXX-XX-XX</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="address" class="form-label">Адрес <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="address" name="address" required>
+                                    </div>
+                                    
+                                    <div class="col-12 mt-4 d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-secondary d-none">Назад</button>
+                                        <button type="button" class="btn btn-primary next-step ms-auto" data-next="professional-section">Далее</button>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Профессиональные данные -->
-                            <div class="form-section">
+                            <div class="form-section d-none" id="professional-section">
                                 <h3 class="form-section-title">Профессиональная информация</h3>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label for="experience" class="form-label">Опыт работы (лет) <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" id="experience" name="experience" min="0" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="specialization" class="form-label">Основная специализация <span class="text-danger">*</span></label>
+                                        <label for="specialization" class="form-label">Специализация <span class="text-danger">*</span></label>
                                         <select class="form-select" id="specialization" name="specialization" required>
                                             <option value="" selected disabled>Выберите специализацию</option>
                                             <option value="smartphones">Смартфоны и планшеты</option>
@@ -116,76 +109,72 @@
                                             <option value="other">Другое</option>
                                         </select>
                                     </div>
-                                    <div class="col-12">
-                                        <label class="form-label">Дополнительные специализации</label>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="spec1" name="additionalSpecializations" value="smartphones">
-                                            <label class="form-check-label" for="spec1">Смартфоны и планшеты</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="spec2" name="additionalSpecializations" value="laptops">
-                                            <label class="form-check-label" for="spec2">Ноутбуки и компьютеры</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="spec3" name="additionalSpecializations" value="tvs">
-                                            <label class="form-check-label" for="spec3">Телевизоры и мониторы</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="spec4" name="additionalSpecializations" value="household">
-                                            <label class="form-check-label" for="spec4">Бытовая техника</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="spec5" name="additionalSpecializations" value="consoles">
-                                            <label class="form-check-label" for="spec5">Игровые консоли</label>
+                                    <div class="col-md-6">
+                                        <label for="experienceYears" class="form-label">Опыт работы (лет) <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="experienceYears" name="experienceYears" min="0" max="50" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="price" class="form-label">Цена за час <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
+                                            <span class="input-group-text">₽</span>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label for="about" class="form-label">О себе и своем опыте</label>
-                                        <textarea class="form-control" id="about" name="about" rows="4"></textarea>
+                                        <label for="description" class="form-label">Описание</label>
+                                        <textarea class="form-control" id="description" name="description" rows="4" maxlength="1000"></textarea>
+                                        <div class="form-text">Опишите свой опыт работы, образование и почему клиенты должны выбрать именно вас (максимум 1000 символов)</div>
+                                    </div>
+                                    
+                                    <div class="col-12 mt-4 d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-secondary prev-step" data-prev="personal-section">Назад</button>
+                                        <button type="button" class="btn btn-primary next-step" data-next="final-section">Далее</button>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Документы и верификация -->
-                            <div class="form-section">
-                                <h3 class="form-section-title">Документы и верификация</h3>
+                            <!-- Завершение регистрации -->
+                            <div class="form-section d-none" id="final-section">
+                                <h3 class="form-section-title">Завершение регистрации</h3>
                                 <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="passport" class="form-label">Паспорт (серия/номер) <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="passport" name="passport" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="inn" class="form-label">ИНН</label>
-                                        <input type="text" class="form-control" id="inn" name="inn">
-                                    </div>
+                                    <!-- Согласие с условиями -->
                                     <div class="col-12">
-                                        <label for="certifications" class="form-label">Сертификаты и дипломы</label>
-                                        <input type="file" class="form-control" id="certifications" name="certifications" multiple>
-                                        <div class="form-text">Вы можете загрузить несколько файлов. Поддерживаемые форматы: PDF, JPG, PNG</div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="termsAgree" name="termsAgree" required>
+                                            <label class="form-check-label" for="termsAgree">
+                                                Я согласен с <a href="/terms" target="_blank">условиями использования</a> и <a href="/privacy" target="_blank">политикой конфиденциальности</a> <span class="text-danger">*</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="dataProcessingAgree" name="dataProcessingAgree" required>
+                                            <label class="form-check-label" for="dataProcessingAgree">
+                                                Я даю согласие на обработку персональных данных <span class="text-danger">*</span>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Согласие с условиями -->
-                            <div class="form-section">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="termsAgree" name="termsAgree" required>
-                                    <label class="form-check-label" for="termsAgree">
-                                        Я согласен с <a href="/terms" target="_blank">условиями использования</a> и <a href="/privacy" target="_blank">политикой конфиденциальности</a> <span class="text-danger">*</span>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="dataProcessingAgree" name="dataProcessingAgree" required>
-                                    <label class="form-check-label" for="dataProcessingAgree">
-                                        Я даю согласие на обработку персональных данных <span class="text-danger">*</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-section text-center">
-                                <button type="submit" class="btn btn-primary btn-lg">Зарегистрироваться</button>
-                                <div class="mt-3">
-                                    <span class="login-link">Уже есть аккаунт? <a href="/login">Войти</a></span>
+                                    
+                                    <div class="col-12 mt-4">
+                                        <div class="alert alert-info" role="alert">
+                                            <div class="d-flex">
+                                                <div class="me-3">
+                                                    <i class="bi bi-info-circle-fill fs-4"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="alert-heading">Проверьте введенные данные</h5>
+                                                    <p class="mb-0">После отправки заявки, мы проверим введенные данные и свяжемся с вами для завершения регистрации. Проверка обычно занимает до 2 рабочих дней.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12 mt-4 d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-secondary prev-step" data-prev="professional-section">Назад</button>
+                                        <button type="submit" class="btn btn-primary btn-lg">Отправить заявку</button>
+                                    </div>
+                                    
+                                    <div class="col-12 text-center mt-3">
+                                        <span class="login-link">Уже есть аккаунт? <a href="/login">Войти</a></span>
+                                    </div>
                                 </div>
                             </div>
                         </form>

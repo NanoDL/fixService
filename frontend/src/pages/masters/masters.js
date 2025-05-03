@@ -1,24 +1,35 @@
 // Точка входа для страницы мастеров
 import '../../styles/main.scss';
 import $ from 'jquery';
-import { initTooltips, initPopovers, initLazyLoading, initSmoothScrolling } from '../../scripts/common.js';
+import {initTooltips, initPopovers, initLazyLoading, initSmoothScrolling, loadHeader} from '../../scripts/common.js';
+import {initNavigation} from "@scripts/navigation";
+import API_CONFIG from '../../../api.config';
 
 // Инициализация компонентов страницы мастеров
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Страница мастеров загружена');
-  
+  loadHeader();
   // Инициализация общих компонентов
   initTooltips();
   initPopovers();
   initLazyLoading();
   initSmoothScrolling();
-  
+  initNavigation(); // Инициализация навигации
   // Инициализация специфичных для страницы мастеров компонентов
   initMastersFilter();
   initMastersSearch();
   
   // Инициализация анимаций
   initAnimations();
+
+  // Загрузка списка мастеров
+  loadMasters();
+  
+  // Инициализация фильтров
+  initFilters();
+  
+  // Инициализация поиска
+  initSearch();
 });
 
 /**

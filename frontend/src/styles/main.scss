@@ -11,6 +11,25 @@
 @use 'components/buttons';
 @use 'components/home';
 @use 'components/registration';
+// Удаляю импорт модального окна, потому что мы определим его прямо здесь
+// @use 'components/_modals';
+
+// Страницы
+@use 'pages/login';
+@use 'pages/profile';
+@use 'pages/create-order';
+@use 'pages/my-orders';
+@use 'pages/devices';
+// Стили для кнопки "Регистрация" в шапке на странице регистрации
+.signup-page-active.signup-btn {
+    background-color: $primary !important;
+    color: #fff !important;
+    border-color: $primary !important;
+
+    &::after {
+        display: none; // Убираем подчеркивание, которое добавляется для активных ссылок
+    }
+}
 
 // Общие стили
 body {
@@ -81,7 +100,7 @@ a {
   transition: var(--transition);
   
   &:hover {
-    color: darken(#0d6efd, 10%);
+    color: color.adjust(#0d6efd, $lightness: -10%);
   }
 }
 
@@ -101,8 +120,8 @@ a {
   border-color: $primary;
   
   &:hover {
-    background-color: darken($primary, 5%);
-    border-color: darken($primary, 5%);
+    background-color: color.adjust($primary, $lightness: -5%);
+    border-color: color.adjust($primary, $lightness: -5%);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba($primary, 0.2);
   }
@@ -163,4 +182,12 @@ a {
   background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-} 
+}
+
+// Простые стили для модальных окон с эффектом боке 
+.modal-backdrop {
+  opacity: 0.7 !important; // Делаем фон темнее
+  backdrop-filter: blur(10px) !important; // Более сильное размытие
+  -webkit-backdrop-filter: blur(10px) !important; // Для Safari
+}
+

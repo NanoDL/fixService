@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface MasterRepository extends JpaRepository<Master, Long> {
     Optional<Master> findByMyUser_Id(Long userId);
-    Master findByMyUser(MyUser myUser);
+    Optional<Master> findByMyUser(MyUser myUser);
 }

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | Сервис поиска мастеров</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="register.js" defer></script>
+</head>
+<body>
+    <!-- Заголовок страницы будет загружен динамически -->
+    <header id="headerContainer"></header>
+
+    <!-- Основной контент -->
+    <main>
+        <section class="registration-choice-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="registration-choice-header text-center mb-5">
+                            <h1 class="registration-choice-title">Регистрация на платформе</h1>
+                            <p class="registration-choice-subtitle">Выберите тип учетной записи, который вам нужен</p>
+                        </div>
+                        
+                        <div class="row registration-options">
+                            <div class="col-md-6 mb-4">
+                                <div class="registration-option-card customer-card">
+                                    <div class="card-icon">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                    <h3 class="option-title">Клиент</h3>
+                                    <p class="option-description">Зарегистрируйтесь как клиент, чтобы находить исполнителей и размещать заказы на услуги</p>
+                                    <ul class="option-benefits">
+                                        <li><i class="bi bi-check-circle-fill"></i> Размещение заказов</li>
+                                        <li><i class="bi bi-check-circle-fill"></i> Поиск специалистов</li>
+                                        <li><i class="bi bi-check-circle-fill"></i> Оценка работы</li>
+                                        <li><i class="bi bi-check-circle-fill"></i> История заказов</li>
+                                    </ul>
+                                    <a href="/register/customer/" class="btn btn-primary registration-btn">
+                                        Регистрация как клиент <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="registration-option-card master-card">
+                                    <div class="card-icon">
+                                        <i class="bi bi-tools"></i>
+                                    </div>
+                                    <h3 class="option-title">Мастер</h3>
+                                    <p class="option-description">Зарегистрируйтесь как мастер, чтобы получать заказы и развивать свой бизнес</p>
+                                    <ul class="option-benefits">
+                                        <li><i class="bi bi-check-circle-fill"></i> Получение заказов</li>
+                                        <li><i class="bi bi-check-circle-fill"></i> Собственный профиль</li>
+                                        <li><i class="bi bi-check-circle-fill"></i> Управление портфолио</li>
+                                        <li><i class="bi bi-check-circle-fill"></i> Рейтинг и отзывы</li>
+                                    </ul>
+                                    <a href="/register/master/" class="btn btn-primary registration-btn">
+                                        Регистрация как мастер <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <p class="login-prompt">
+                                Уже зарегистрированы? <a href="/login" class="login-link">Войти в аккаунт</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>&copy; 2023 Сервис поиска мастеров. Все права защищены.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

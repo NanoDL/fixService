@@ -2,6 +2,10 @@ package ru.ruslan.spring.diplom.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.ruslan.spring.diplom.dto.DeviceModelRequestDto;
@@ -13,6 +17,7 @@ import ru.ruslan.spring.diplom.model.Firmware;
 import ru.ruslan.spring.diplom.service.DeviceModelService;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/devices")
@@ -25,8 +30,15 @@ public class DeviceController {
     }
 
     @GetMapping
-    public List<DeviceModel> getAllDevices(){
-        return deviceModelService.fildAll();
+    public Page<DeviceModel> getAllDevices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String manufacturer,
+            @RequestParam(required = false) DeviceType type,
+            @RequestParam(required = false) String search) {
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        return deviceModelService.findAllWithFilters(pageable, type, manufacturer, search);
     }
 
     @GetMapping("/{id}")
@@ -38,10 +50,14 @@ public class DeviceController {
     public List<DeviceType> getTypes(){
         return List.of(DeviceType.values());
     }
+    
+    @GetMapping("/manufacturers")
+    public Set<String> getManufacturers() {
+        return deviceModelService.findAllManufacturers();
+    }
 
     @PostMapping
     public DeviceModel addNewDevice(@RequestBody @Valid DeviceModelRequestDto dto){
-
         return deviceModelService.addNew(dto);
     }
 
@@ -69,5 +85,4 @@ public class DeviceController {
     public Firmware getFirmwareFromDevice(@PathVariable Long deviceId, @PathVariable Long firmwareId) {
         return deviceModelService.getFirmwareFromDevice(deviceId, firmwareId);
     }
-
 }

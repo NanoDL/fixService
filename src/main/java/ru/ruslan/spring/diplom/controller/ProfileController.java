@@ -1,28 +1,49 @@
 package ru.ruslan.spring.diplom.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ruslan.spring.diplom.dto.BaseProfileDto;
+import ru.ruslan.spring.diplom.dto.PasswordChangeDto;
+import ru.ruslan.spring.diplom.dto.PasswordConfirmationDto;
 import ru.ruslan.spring.diplom.model.MyUser;
-import ru.ruslan.spring.diplom.service.MyUserService;
 import ru.ruslan.spring.diplom.service.ProfileService;
+import ru.ruslan.spring.diplom.service.MyUserService;
 
 @RestController
 @RequestMapping("/api/profile")
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class ProfileController {
 
     private final MyUserService myUserService;
     private final ProfileService profileService;
 
-    @Autowired
-    public ProfileController(MyUserService myUserService, ProfileService profileService) {
-        this.myUserService = myUserService;
-        this.profileService = profileService;
+    @GetMapping
+    public ResponseEntity<BaseProfileDto> getProfile() {
+        MyUser user = myUserService.getUserFromContext();
+        BaseProfileDto profileDto = profileService.getUserProfile(user);
+        return ResponseEntity.ok(profileDto);
     }
 
-    @GetMapping
-    public BaseProfileDto getProfile() {
+    @PutMapping
+    public ResponseEntity<BaseProfileDto> updateProfile(@RequestBody BaseProfileDto profileDto) {
         MyUser user = myUserService.getUserFromContext();
-        return profileService.getUserProfile(user);
+        BaseProfileDto updatedProfile = profileService.updateProfile(user, profileDto);
+        return ResponseEntity.ok(updatedProfile);
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<?> changePassword(@RequestBody PasswordChangeDto passwordChangeDto) {
+        MyUser user = myUserService.getUserFromContext();
+        profileService.changePassword(user, passwordChangeDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteAccount(@RequestBody PasswordConfirmationDto confirmationDto) {
+        MyUser user = myUserService.getUserFromContext();
+        profileService.deleteAccount(user, confirmationDto);
+        return ResponseEntity.ok().build();
     }
 }

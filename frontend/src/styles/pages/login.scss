@@ -1,0 +1,200 @@
+@use '../variables' as *;
+@use "sass:color";
+
+// Стили для кнопки "Войти" в шапке на странице входа
+.login-page-active.login-btn {
+    background-color: $primary !important;
+    color: #fff !important;
+    border-color: $primary !important;
+
+    &::after {
+        display: none; // Убираем подчеркивание, которое добавляется для активных ссылок
+    }
+}
+
+.login-section {
+    min-height: 100vh;
+    padding: 120px 0 60px;
+    display: flex;
+    align-items: center;
+    background-color: $light;
+    background-image: linear-gradient(120deg, rgba($primary, 0.05) 0%, rgba($secondary, 0.05) 100%);
+}
+
+.login-card {
+    background-color: #fff;
+    border-radius: $border-radius-lg;
+    box-shadow: $box-shadow;
+    padding: 2.5rem;
+    transition: all 0.3s ease;
+    
+    @media (max-width: 768px) {
+        padding: 1.5rem;
+    }
+    
+    &:hover {
+        box-shadow: $box-shadow-lg;
+    }
+}
+
+.section-title {
+    color: $primary;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: $text-muted;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    label {
+        font-weight: 500;
+        color: $body-color;
+        margin-bottom: 0.5rem;
+    }
+    
+    .input-group {
+        .input-group-text {
+            background-color: transparent;
+            border-right: none;
+            color: $text-muted;
+        }
+        
+        .form-control {
+            border-left: none;
+            padding-left: 0;
+            
+            &:focus {
+                box-shadow: none;
+                border-color: $gray-400;
+                
+                + .input-group-text {
+                    border-color: $gray-400;
+                }
+            }
+        }
+        
+        .toggle-password {
+            border-left: none;
+            background-color: transparent;
+            
+            &:focus {
+                box-shadow: none;
+            }
+            
+            i {
+                color: $text-muted;
+            }
+        }
+    }
+}
+
+.forgot-password {
+    color: $primary;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s;
+    
+    &:hover {
+        color: color.adjust($primary, $lightness: -10%);
+        text-decoration: underline;
+    }
+}
+
+.login-button {
+    height: 48px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: relative;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba($primary, 0.2);
+    }
+}
+
+.social-login {
+    position: relative;
+    margin: 2rem 0 1rem;
+    
+    .social-login-title {
+        font-size: 0.9rem;
+        color: $text-muted;
+        position: relative;
+        text-align: center;
+        
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background-color: $gray-300;
+        }
+        
+        &::before {
+            left: 0;
+        }
+        
+        &::after {
+            right: 0;
+        }
+    }
+    
+    .social-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            
+            i {
+                font-size: 1.25rem;
+            }
+            
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: $box-shadow-sm;
+            }
+        }
+    }
+}
+
+.register-link {
+    p {
+        color: $body-color;
+        font-size: 0.95rem;
+        
+        a {
+            color: $primary;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+            
+            &:hover {
+                color: color.adjust($primary, $lightness: -10%);
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.alert-danger {
+    background-color: rgba($danger, 0.1);
+    border-color: rgba($danger, 0.2);
+    color: $danger;
+} 

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание заказа - РемонтСервис</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Стили будут подключены автоматически через WebPack -->
+</head>
+<body>
+    <!-- Навигация -->
+    <div id="headerContainer">
+        <!-- Сюда будет загружен хедер -->
+    </div>
+
+    <!-- Основной контент -->
+    <section class="create-order-section py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white py-3">
+                            <h2 class="card-title text-center mb-0">Создание заказа</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="create-order-form">
+                                <div class="alert alert-info mb-4">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="bi bi-info-circle-fill fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-0">Заполните форму, чтобы создать заказ на ремонт вашего устройства. После отправки заказа, мастера смогут предложить свои услуги.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="repairType" class="form-label">Тип ремонта <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="repairType" name="repairType" required>
+                                        <option value="" selected disabled>Выберите тип ремонта</option>
+                                        <option value="SCREEN_REPLACEMENT">Замена экрана</option>
+                                        <option value="BATTERY_REPLACEMENT">Замена батареи</option>
+                                        <option value="SOFTWARE_REPAIR">Настройка программного обеспечения</option>
+                                        <option value="WATER_DAMAGE">Ремонт после воды</option>
+                                        <option value="COMPONENT_REPLACEMENT">Замена компонентов</option>
+                                        <option value="CLEANING">Чистка от пыли</option>
+                                        <option value="OTHER">Другое</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="deviceModelId" class="form-label">Модель устройства</label>
+                                    <select class="form-select" id="deviceModelId" name="deviceModelId">
+                                        <option value="" selected>Выберите модель устройства (опционально)</option>
+                                        <!-- Список моделей будет загружен из API -->
+                                    </select>
+                                    <div class="form-text">Если вы не нашли нужную модель, не выбирайте ничего</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="description" class="form-label">Описание проблемы <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="description" name="description" rows="5" required placeholder="Опишите проблему как можно подробнее..."></textarea>
+                                    <div class="form-text">Укажите все детали проблемы, чтобы мастер мог дать точную оценку</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="price" class="form-label">Предполагаемая стоимость (₽)</label>
+                                    <input type="number" class="form-control" id="price" name="price" placeholder="Введите сумму" min="0">
+                                    <div class="form-text">Оставьте пустым, если не знаете предполагаемую стоимость</div>
+                                </div>
+
+                                <div class="d-grid gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg">Создать заказ</button>
+                                    <a href="/profile" class="btn btn-outline-secondary">Отмена</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">
+                        <span class="footer-brand-text">РемонтСервис</span>
+                    </div>
+                    <p class="footer-description">Удобная платформа для поиска квалифицированных мастеров, которые быстро и качественно отремонтируют вашу технику</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="bi bi-telegram"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-vk"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Платформа</h5>
+                    <ul class="footer-links">
+                        <li><a href="/about">О нас</a></li>
+                        <li><a href="/masters">Мастерам</a></li>
+                        <li><a href="/customers">Заказчикам</a></li>
+                        <li><a href="/pricing">Тарифы</a></li>
+                        <li><a href="/partners">Партнерам</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Информация</h5>
+                    <ul class="footer-links">
+                        <li><a href="/help">Помощь</a></li>
+                        <li><a href="/faq">Частые вопросы</a></li>
+                        <li><a href="/blog">Блог</a></li>
+                        <li><a href="/terms">Условия использования</a></li>
+                        <li><a href="/privacy">Политика конфиденциальности</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-heading">Контакты</h5>
+                    <ul class="footer-contacts">
+                        <li><i class="bi bi-telephone"></i> 8 (800) 123-45-67</li>
+                        <li><i class="bi bi-envelope"></i> info@remontservice.ru</li>
+                        <li><i class="bi bi-geo-alt"></i> Москва, ул. Примерная, д. 1</li>
+                    </ul>
+                    <div class="footer-app-buttons">
+                        <a href="#" class="btn btn-sm btn-outline-light mb-2"><i class="bi bi-apple me-2"></i>App Store</a>
+                        <a href="#" class="btn btn-sm btn-outline-light"><i class="bi bi-google me-2"></i>Google Play</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="copyright">© 2023 РемонтСервис. Все права защищены.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="payment-methods text-md-end">
+                            <span>Мы принимаем:</span>
+                            <i class="bi bi-credit-card"></i>
+                            <i class="bi bi-credit-card-2-front"></i>
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Скрипты будут подключены автоматически через WebPack -->
+</body>
+</html> 

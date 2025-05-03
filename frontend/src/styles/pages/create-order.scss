@@ -1,0 +1,128 @@
+// Стили для страницы создания заказа
+@use "sass:color";
+
+// Основные стили
+.create-order-section {
+  padding-top: 100px; // Отступ для фиксированной навигации
+  min-height: calc(100vh - 300px); // Минимальная высота, чтобы футер не "прыгал"
+  
+  .card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    
+    .card-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      
+      .card-title {
+        color: #333;
+        font-weight: 600;
+      }
+    }
+    
+    .card-body {
+      padding: 2rem;
+    }
+  }
+  
+  // Стили для формы
+  form {
+    .form-label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-control, .form-select {
+      border-radius: 8px;
+      padding: 0.625rem 1rem;
+      border-color: #e0e0e0;
+      transition: all 0.2s ease;
+      
+      &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        border-color: #86b7fe;
+      }
+      
+      &::placeholder {
+        color: #adb5bd;
+      }
+    }
+    
+    .form-text {
+      color: #6c757d;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+    
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .alert {
+      border-radius: 8px;
+      
+      i.bi {
+        font-size: 1.25rem;
+      }
+    }
+    
+    .btn {
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      
+      &-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        
+        &:hover {
+          background-color: color.adjust(#0d6efd, $lightness: -5%);
+          border-color: color.adjust(#0d6efd, $lightness: -5%);
+        }
+      }
+      
+      &-outline-secondary {
+        color: #6c757d;
+        border-color: #6c757d;
+        
+        &:hover {
+          background-color: #6c757d;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .create-order-section {
+    .card {
+      .card-body {
+        padding: 1.5rem;
+      }
+    }
+    
+    form {
+      .btn {
+        padding: 0.625rem 1.25rem;
+      }
+    }
+  }
+}
+
+// Стили для уведомлений
+.alert {
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  
+  .btn-close {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+} 

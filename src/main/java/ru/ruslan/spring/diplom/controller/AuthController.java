@@ -16,10 +16,12 @@ import ru.ruslan.spring.diplom.dto.MasterRegistrationDto;
 import ru.ruslan.spring.diplom.model.Admin;
 import ru.ruslan.spring.diplom.model.Customer;
 import ru.ruslan.spring.diplom.model.Master;
+import ru.ruslan.spring.diplom.model.MyUser;
 import ru.ruslan.spring.diplom.security.JWTUtil;
 import ru.ruslan.spring.diplom.service.AdminRegistrationService;
 import ru.ruslan.spring.diplom.service.CustomerRegistrationService;
 import ru.ruslan.spring.diplom.service.MasterRegistrationService;
+import ru.ruslan.spring.diplom.service.MyUserService;
 
 import java.util.Map;
 
@@ -32,14 +34,16 @@ public class AuthController {
     private final MasterRegistrationService masterRegistrationService;
     private final AdminRegistrationService adminRegistrationService;
     private final JWTUtil jwtUtil;
+    private final MyUserService myUserService;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, CustomerRegistrationService customerRegistrationService, MasterRegistrationService masterRegistrationService, AdminRegistrationService adminRegistrationService, JWTUtil jwtUtil) {
+    public AuthController(AuthenticationManager authenticationManager, CustomerRegistrationService customerRegistrationService, MasterRegistrationService masterRegistrationService, AdminRegistrationService adminRegistrationService, JWTUtil jwtUtil, MyUserService myUserService) {
         this.authenticationManager = authenticationManager;
         this.customerRegistrationService = customerRegistrationService;
         this.masterRegistrationService = masterRegistrationService;
         this.adminRegistrationService = adminRegistrationService;
         this.jwtUtil = jwtUtil;
+        this.myUserService = myUserService;
     }
 
     @PostMapping("/login")
@@ -52,6 +56,7 @@ public class AuthController {
         } catch (BadCredentialsException e){
             return Map.of("message", "Incorrect credentials!");
         }
+
 
         String token = jwtUtil.generateToken(authenticationDto.getUsername());
         System.out.println(token);

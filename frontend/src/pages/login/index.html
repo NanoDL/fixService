@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему - РемонтСервис</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Стили будут подключены автоматически через WebPack -->
+</head>
+<body>
+    <!-- Навигация -->
+    <div id="headerContainer">
+        <!-- Запасной вариант хедера, если не удастся загрузить компонент -->
+
+    </div>
+
+    <!-- Секция входа -->
+    <section class="login-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="login-card">
+                        <div class="section-header text-center mb-4">
+                            <h2 class="section-title">Вход в систему</h2>
+                            <p class="section-subtitle">Войдите в свой аккаунт для доступа к вашим заказам и услугам</p>
+                        </div>
+                        
+                        <form id="loginForm" class="login-form">
+                            <div class="alert alert-danger d-none" id="loginError" role="alert">
+                                Неверное имя пользователя или пароль
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="username" class="form-label">Имя пользователя или Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Введите имя пользователя или email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mb-4">
+                                <label for="password" class="form-label">Пароль</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Введите пароль" required>
+                                    <button class="btn btn-outline-secondary toggle-password" type="button">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="d-flex justify-content-end mt-2">
+                                    <a href="/reset-password" class="forgot-password">Забыли пароль?</a>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">
+                                        Запомнить меня
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 login-button">
+                                <span class="login-text">Войти</span>
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        </form>
+                        <!--
+                        <div class="social-login mt-4">
+                            <p class="text-center social-login-title">Или войдите через</p>
+                            <div class="social-buttons">
+                                <button class="btn btn-outline-secondary social-btn">
+                                    <i class="bi bi-google"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary social-btn">
+                                    <i class="bi bi-facebook"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary social-btn">
+                                    <i class="bi bi-vk"></i>
+                                </button>
+                            </div>
+                        </div>
+                        -->
+                        
+                        <div class="register-link mt-4 text-center">
+                            <p>Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал сайта -->
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="footer-title">РемонтСервис</h5>
+                    <p class="footer-description">Платформа для быстрого и удобного поиска специалистов по ремонту техники</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-telegram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="footer-subtitle">Клиентам</h5>
+                    <ul class="footer-links">
+                        <li><a href="/how-it-works">Как это работает</a></li>
+                        <li><a href="/create-order">Создать заявку</a></li>
+                        <li><a href="/find-master">Найти мастера</a></li>
+                        <li><a href="/faq">Частые вопросы</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="footer-subtitle">Мастерам</h5>
+                    <ul class="footer-links">
+                        <li><a href="/become-master">Стать мастером</a></li>
+                        <li><a href="/find-orders">Найти заказы</a></li>
+                        <li><a href="/pricing">Цены и комиссии</a></li>
+                        <li><a href="/master-faq">Частые вопросы</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h5 class="footer-subtitle">Контакты</h5>
+                    <ul class="contact-links">
+                        <li><i class="bi bi-geo-alt"></i> Москва, ул. Примерная, 123</li>
+                        <li><i class="bi bi-telephone"></i> +7 (999) 123-45-67</li>
+                        <li><i class="bi bi-envelope"></i> info@remontservice.ru</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="row footer-bottom">
+                <div class="col-md-6 copyright">
+                    <p>&copy; 2023 РемонтСервис. Все права защищены.</p>
+                </div>
+                <div class="col-md-6 legal-links">
+                    <a href="/terms">Условия использования</a>
+                    <a href="/privacy">Политика конфиденциальности</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

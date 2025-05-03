@@ -26,6 +26,6 @@ public class MasterService {
     }
 
     public Master findByMyUser(MyUser myUser) {
-        return masterRepository.findByMyUser(myUser);
+        return masterRepository.findByMyUser(myUser).orElseThrow(()-> new RuntimeException("Мастер не найден"));
     }
 }

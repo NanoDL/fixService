@@ -26,6 +26,7 @@ public class CustomerService {
     }
 
     public Customer findByMyUser(MyUser myUser) {
-        return customerRepository.findByMyUser(myUser);
+        return customerRepository.findByMyUser(myUser)
+                .orElseThrow(() -> new IllegalArgumentException("Заказчик не найден"));
     }
 }
