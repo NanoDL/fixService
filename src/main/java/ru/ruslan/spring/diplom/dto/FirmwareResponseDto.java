@@ -1,32 +1,37 @@
 package ru.ruslan.spring.diplom.dto;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.ruslan.spring.diplom.enums.DeviceType;
 import ru.ruslan.spring.diplom.model.DeviceModel;
-import ru.ruslan.spring.diplom.model.Master;
+import ru.ruslan.spring.diplom.model.MyUser;
 
 import java.util.Date;
 import java.util.List;
-
 @Data
-public class FirmwareRequestDto {
+@AllArgsConstructor
+public class FirmwareResponseDto {
+    private Long id;
 
-    @NotBlank
     private String name;
 
     private String description;
 
     private String version;
 
-    @Enumerated(value = EnumType.STRING)
     private DeviceType deviceType;
 
     private String manufacturer;
 
     private String fileUrl;
 
-    private List<DeviceModel> compatibleDevices;
+    private List<DeviceModelResponseInfoDto> compatibleDevices;
+
+    private Date uploadDate;
+
+    private MyUser uploadedBy;
+
+    private MyUser updatedBy;
 }

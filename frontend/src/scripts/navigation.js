@@ -1,6 +1,6 @@
 // Скрипт для управления навигацией и меню
 import $ from 'jquery';
-import { isAuthenticated, getUserRole, isCustomer, isMaster, logout as userLogout } from './userUtils';
+import {isAuthenticated, getUserRole, isCustomer, isMaster, logout as userLogout, isAdmin} from './userUtils';
 
 // Инициализация навигации
 export function initNavigation() {
@@ -22,6 +22,19 @@ function updateNavigation() {
     // Пользователь авторизован
     $('.auth-required').show();
     $('.auth-not-required').hide();
+
+    if (isAdmin()) {
+      $('.admin-only').show();
+    } else  {
+      $('.admin-only').hide();
+    }
+
+    // Отображаем элементы в зависимости от роли пользователя
+    if (isMaster()) {
+      $('.master-only').show();
+    } else {
+      $('.master-only').hide();
+    }
     
     // Скрываем кнопки входа и регистрации
     $('.login-btn, .signup-btn').parent('.nav-item').hide();
@@ -100,6 +113,7 @@ function updateNavigation() {
     // Пользователь не авторизован
     $('.auth-required').hide();
     $('.auth-not-required').show();
+    $('.master-only').hide();
     
     // Показываем кнопки входа и регистрации
     $('.login-btn, .signup-btn').parent('.nav-item').show();

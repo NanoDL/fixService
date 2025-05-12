@@ -20,7 +20,10 @@ module.exports = (env, argv) => {
             profile: './src/pages/profile/profile.js',
             createOrder: './src/pages/orders/create-order.js',
             myOrders: './src/pages/orders/my/my-orders.js',
-            devices: './src/pages/devices/devices.js'
+            devices: './src/pages/devices/devices.js',
+            addDevice: './src/pages/devices/add/add-device.js',
+            firmwares: './src/pages/firmwares/firmwares.js',
+            addFirmware: './src/pages/firmwares/add/add-firmware.js'
         },
         output: {
             path: path.resolve(__dirname, 'dist'),
@@ -42,10 +45,13 @@ module.exports = (env, argv) => {
                     { from: /^\/register\/customer/, to: '/register/customer/index.html' },
                     { from: /^\/orders\/my/, to: '/orders/my/index.html' },
                     { from: /^\/orders/, to: '/orders/index.html' },
+                    { from: /^\/devices\/add/, to: '/devices/add/index.html' },
                     { from: /^\/devices/, to: '/devices/index.html' },
                     { from: /./, to: '/index.html' },
                     { from: /\/login/, to: '/login/index.html'},
-                    { from: /\/profile/, to: '/profile/index.html'}
+                    { from: /\/profile/, to: '/profile/index.html'},
+                    { from: /\/firmwares/, to: '/firmwares/index.html'},
+                    { from: /\firmwares\/add/, to: '/firmwares/add/index.html'}
                 ]
             },
             proxy: [
@@ -183,6 +189,24 @@ module.exports = (env, argv) => {
                 template: './src/pages/devices/index.html',
                 filename: 'devices/index.html',
                 chunks: ['devices'],
+                inject: true
+            }),
+            new HtmlWebpackPlugin({
+                template: './src/pages/devices/add/index.html',
+                filename: 'devices/add/index.html',
+                chunks: ['addDevice'],
+                inject: true
+            }),
+            new HtmlWebpackPlugin({
+                template: './src/pages/firmwares/index.html',
+                filename: 'firmwares/index.html',
+                chunks: ['firmwares'],
+                inject: true
+            }),
+            new HtmlWebpackPlugin({
+                template: './src/pages/firmwares/add/index.html',
+                filename: 'firmwares/add/index.html',
+                chunks: ['addFirmware'],
                 inject: true
             }),
             new CopyWebpackPlugin({

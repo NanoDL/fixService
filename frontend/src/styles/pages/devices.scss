@@ -111,4 +111,225 @@
             border-radius: 0 5px 5px 0;
         }
     }
+}
+
+// Стили для модального окна устройств
+.modal {
+    .modal-dialog {
+        max-width: 600px;
+    }
+    
+    .modal-content {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modal-header {
+        border-bottom: 1px solid #f1f1f1;
+        padding: 1.25rem 1.5rem;
+        
+        .modal-title {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-footer {
+        border-top: 1px solid #f1f1f1;
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .device-detail-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 1rem;
+    }
+    
+    .device-info-row {
+        padding: 0.5rem 0;
+    }
+    
+    .device-main-info {
+        border-left: 4px solid var(--primary-color);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .firmware-container {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #f1f1f1;
+        
+        .firmware-header {
+            background-color: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+            
+            h6 {
+                color: #333;
+                font-weight: 600;
+            }
+        }
+        
+        .firmware-content {
+            padding: 0;
+            background-color: transparent;
+        }
+    }
+    
+    .firmware-items-container {
+        border-radius: 10px;
+        overflow: hidden;
+        padding: 0.5rem 0;
+        background-color: transparent;
+    }
+    
+    .firmware-item {
+        border: none;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+        overflow: hidden;
+        background-color: white;
+        border: 1px solid #e9ecef;
+        margin-bottom: 0.75rem;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .card-body {
+            padding: 1rem 1.25rem;
+            background-color: white;
+        }
+        
+        h6 {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+        
+        .badge {
+            font-weight: 500;
+            padding: 0.4rem 0.75rem;
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            border-radius: 20px;
+            
+            &:hover {
+                background-color: var(--primary-color);
+                color: white;
+            }
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+        }
+    }
+    
+    #firmwares-loading {
+        min-height: 100px;
+        background-color: transparent;
+    }
+    
+    .firmware-count {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.75rem;
+        background-color: var(--gray-color);
+        color: white;
+        border-radius: 20px;
+    }
+    
+    .alert {
+        border-left: 4px solid;
+        border-radius: 8px;
+        
+        &.alert-info {
+            border-color: var(--secondary-color);
+            background-color: #e3f2fd;
+            color: #0c5460;
+        }
+        
+        &.alert-danger {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    }
+}
+
+// Стили для страницы добавления устройства
+.add-device-section {
+    padding: 40px 0;
+    
+    .card {
+        border: none;
+        border-radius: 8px;
+        
+        .card-body {
+            padding: 2rem;
+        }
+    }
+    
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control, .form-select {
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+    }
+    
+    .text-danger {
+        font-weight: bold;
+    }
+    
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+        
+        &.btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            
+            &:hover {
+                background-color: darken(#0d6efd, 10%);
+                border-color: darken(#0d6efd, 10%);
+            }
+        }
+        
+        &.btn-outline-secondary {
+            color: var(--gray-color);
+            border-color: var(--gray-color);
+            
+            &:hover {
+                background-color: var(--gray-color);
+                color: white;
+            }
+        }
+    }
+    
+    #loading-indicator, #success-message, #error-message {
+        margin-top: 2rem;
+    }
 } 

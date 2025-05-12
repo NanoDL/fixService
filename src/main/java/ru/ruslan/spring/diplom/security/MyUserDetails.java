@@ -40,7 +40,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return myUser.isActive();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return myUser.isActive();
+        return true;
     }
 
     public MyUser getMyUser() {

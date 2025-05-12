@@ -451,4 +451,25 @@
       }
     }
   }
+}
+
+// Стили для вкладок профиля
+.profile-tabs-content {
+  min-height: 600px;
+  position: relative;
+  
+  .tab-pane {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: none;
+    
+    &.show.active {
+      opacity: 1;
+      display: block;
+    }
+  }
+  
+  .profile-card {
+    margin-bottom: 20px;
+  }
 } 

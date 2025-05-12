@@ -9,6 +9,35 @@ export function initProfile() {
     return; // Не на странице профиля
   }
   
+  // Инициализация вкладок Bootstrap с правильным очищением предыдущих вкладок
+  const tabLinks = document.querySelectorAll('.profile-menu .nav-link');
+  
+  tabLinks.forEach(tab => {
+    tab.addEventListener('click', function (event) {
+      event.preventDefault();
+      
+      // Получаем целевую вкладку
+      const targetTabId = this.getAttribute('href');
+      
+      // Скрываем все вкладки
+      document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('show', 'active');
+      });
+      
+      // Показываем целевую вкладку
+      const targetTab = document.querySelector(targetTabId);
+      if (targetTab) {
+        targetTab.classList.add('show', 'active');
+      }
+      
+      // Обновляем активную ссылку в меню
+      document.querySelectorAll('.profile-menu .nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      this.classList.add('active');
+    });
+  });
+  
   // Загрузка данных профиля
   loadProfileData();
   
@@ -71,12 +100,6 @@ function displayProfileData(data) {
   } else if (userRole === 'ADMIN') {
     displayAdminProfile(data);
   }
-  
-  // Загрузка списка заказов, если роль CUSTOMER или MASTER
-  if ((userRole === 'CUSTOMER' || userRole === 'MASTER') && data.orders && data.orders.length > 0) {
-    $('#completedOrders').text(countCompletedOrders(data.orders));
-    displayOrders(data.orders);
-  }
 }
 
 // Определение отображаемого имени в зависимости от роли
@@ -111,35 +134,31 @@ function setupUIForRole(role) {
   // Показываем блоки в зависимости от роли
   $(`.${role.toLowerCase()}-specific`).show();
   
-  // Настраиваем вкладки меню в зависимости от роли
-  if (role === 'CUSTOMER') {
-    $('#ordersTabTitle').text('Мои заказы');
-    $('#createOrderBtn').show();
-  } else if (role === 'MASTER') {
-    $('#ordersTabTitle').text('Мои выполненные заказы');
-    $('#createOrderBtn').hide();
-  } else if (role === 'ADMIN') {
-    // Для администратора можно показать дополнительные вкладки
+  // Для администратора показываем дополнительные вкладки
+  if (role === 'ADMIN') {
     $('.admin-tabs').show();
   }
+  
+  // Активируем первую вкладку
+  $('.profile-menu .nav-link').first().tab('show');
 }
 
 // Отображение профиля заказчика
 function displayCustomerProfile(data) {
   // Заполнение блока информации профиля
-  $('#fullNameValue').text(`${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Не указано');
-  $('#emailValue').text(data.email || 'Не указан');
-  $('#phoneValue').text(data.phoneNumber || 'Не указан');
-  $('#addressValue').text(data.address || 'Не указан');
-  $('#bioValue').text(data.bio || 'Информация не заполнена');
+  $('#profile-tab .customer-specific #fullNameValue').text(`${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Не указано');
+  $('#profile-tab .customer-specific #emailValue').text(data.email || 'Не указан');
+  $('#profile-tab .customer-specific #phoneValue').text(data.phoneNumber || 'Не указан');
+  $('#profile-tab .customer-specific #addressValue').text(data.address || 'Не указан');
+  $('#profile-tab .customer-specific #bioValue').text(data.bio || 'Информация не заполнена');
   
   // Заполнение полей формы редактирования
-  $('#firstName').val(data.firstName || '');
-  $('#lastName').val(data.lastName || '');
-  $('#email').val(data.email || '');
-  $('#phone').val(data.phoneNumber || '');
-  $('#address').val(data.address || '');
-  $('#bio').val(data.bio || '');
+  $('#profile-tab .customer-specific #firstName').val(data.firstName || '');
+  $('#profile-tab .customer-specific #lastName').val(data.lastName || '');
+  $('#profile-tab .customer-specific #email').val(data.email || '');
+  $('#profile-tab .customer-specific #phone').val(data.phoneNumber || '');
+  $('#profile-tab .customer-specific #address').val(data.address || '');
+  $('#profile-tab .customer-specific #bio').val(data.bio || '');
   
   // Отображение статусов
   updateVerificationStatus(data.isVerified);
@@ -148,24 +167,24 @@ function displayCustomerProfile(data) {
 // Отображение профиля мастера
 function displayMasterProfile(data) {
   // Заполнение блока информации профиля
-  $('#masterNameValue').text(data.name || 'Не указано');
-  $('#emailValue').text(data.email || 'Не указан');
-  $('#phoneValue').text(data.phoneNumber || 'Не указан');
-  $('#addressValue').text(data.address || 'Не указан');
-  $('#specializationValue').text(data.specialization || 'Не указана');
-  $('#experienceValue').text(data.experienceYears ? `${data.experienceYears} лет` : 'Не указан');
-  $('#priceValue').text(data.price ? `от ${data.price} ₽` : 'Не указана');
-  $('#descriptionValue').text(data.description || 'Информация не заполнена');
+  $('#profile-tab .master-specific #masterNameValue').text(data.name || 'Не указано');
+  $('#profile-tab .master-specific #emailValue').text(data.email || 'Не указан');
+  $('#profile-tab .master-specific #phoneValue').text(data.phoneNumber || 'Не указан');
+  $('#profile-tab .master-specific #addressValue').text(data.address || 'Не указан');
+  $('#profile-tab .master-specific #specializationValue').text(data.specialization || 'Не указана');
+  $('#profile-tab .master-specific #experienceValue').text(data.experienceYears ? `${data.experienceYears} лет` : 'Не указан');
+  $('#profile-tab .master-specific #priceValue').text(data.price ? `от ${data.price} ₽` : 'Не указана');
+  $('#profile-tab .master-specific #descriptionValue').text(data.description || 'Информация не заполнена');
   
   // Заполнение полей формы редактирования
-  $('#masterName').val(data.name || '');
-  $('#email').val(data.email || '');
-  $('#phone').val(data.phoneNumber || '');
-  $('#address').val(data.address || '');
-  $('#specialization').val(data.specialization || '');
-  $('#experience').val(data.experienceYears || '');
-  $('#price').val(data.price || '');
-  $('#description').val(data.description || '');
+  $('#profile-tab .master-specific #masterName').val(data.name || '');
+  $('#profile-tab .master-specific #email').val(data.email || '');
+  $('#profile-tab .master-specific #phone').val(data.phoneNumber || '');
+  $('#profile-tab .master-specific #address').val(data.address || '');
+  $('#profile-tab .master-specific #specialization').val(data.specialization || '');
+  $('#profile-tab .master-specific #experience').val(data.experienceYears || '');
+  $('#profile-tab .master-specific #price').val(data.price || '');
+  $('#profile-tab .master-specific #description').val(data.description || '');
   
   // Обновление рейтинга
   updateMasterRating(data.rating);
@@ -174,15 +193,15 @@ function displayMasterProfile(data) {
 // Отображение профиля администратора
 function displayAdminProfile(data) {
   // Заполнение блока информации профиля
-  $('#fullNameValue').text(`${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Не указано');
-  $('#emailValue').text(data.email || 'Не указан');
-  $('#notesValue').text(data.notes || 'Нет заметок');
+  $('#profile-tab .admin-specific #fullNameValue').text(`${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Не указано');
+  $('#profile-tab .admin-specific #emailValue').text(data.email || 'Не указан');
+  $('#profile-tab .admin-specific #notesValue').text(data.notes || 'Нет заметок');
   
   // Заполнение полей формы редактирования
-  $('#firstName').val(data.firstName || '');
-  $('#lastName').val(data.lastName || '');
-  $('#email').val(data.email || '');
-  $('#notes').val(data.notes || '');
+  $('#profile-tab .admin-specific #firstName').val(data.firstName || '');
+  $('#profile-tab .admin-specific #lastName').val(data.lastName || '');
+  $('#profile-tab .admin-specific #email').val(data.email || '');
+  $('#profile-tab .admin-specific #notes').val(data.notes || '');
   
   // Отображение статуса суперадмина
   if (data.isSuperAdmin) {
@@ -204,10 +223,10 @@ function updateVerificationStatus(isVerified) {
 // Обновление рейтинга мастера
 function updateMasterRating(rating) {
   const ratingValue = parseFloat(rating) || 0;
-  $('#masterRatingValue').text(ratingValue.toFixed(1));
+  $('#profile-tab .master-specific #masterRatingValue').text(ratingValue.toFixed(1));
   
   // Обновляем звезды рейтинга
-  const starsContainer = $('#ratingStars');
+  const starsContainer = $('#profile-tab .master-specific #ratingStars');
   starsContainer.empty();
   
   for (let i = 1; i <= 5; i++) {
@@ -222,105 +241,39 @@ function updateMasterRating(rating) {
   }
 }
 
-// Подсчет завершенных заказов
-function countCompletedOrders(orders) {
-  if (!orders || !orders.length) return 0;
-  return orders.filter(order => order.status === 'COMPLETED').length;
-}
-
-// Отображение заказов пользователя
-function displayOrders(orders) {
-  const activeOrders = orders.filter(order => order.status !== 'COMPLETED' && order.status !== 'CANCELED');
-  const completedOrders = orders.filter(order => order.status === 'COMPLETED' || order.status === 'CANCELED');
-  
-  if (activeOrders.length > 0) {
-    const activeOrdersHtml = activeOrders.map(order => createOrderCard(order)).join('');
-    $('#activeOrdersList').html(activeOrdersHtml);
-  }
-  
-  if (completedOrders.length > 0) {
-    const completedOrdersHtml = completedOrders.map(order => createOrderCard(order)).join('');
-    $('#completedOrdersList').html(completedOrdersHtml);
-  }
-}
-
-// Создание HTML-карточки заказа
-function createOrderCard(order) {
-  const statusClass = getStatusClass(order.status);
-  const statusText = getStatusText(order.status);
-  const date = new Date(order.creationDate).toLocaleDateString('ru-RU');
-  
-  return `
-    <div class="order-card" data-order-id="${order.id}">
-      <div class="order-header">
-        <div class="order-id">№${order.id}</div>
-        <div class="order-status ${statusClass}">${statusText}</div>
-      </div>
-      <h4 class="order-title">${order.title}</h4>
-      <div class="order-details">
-        <div class="order-detail">
-          <i class="bi bi-calendar3"></i> ${date}
-        </div>
-        <div class="order-detail">
-          <i class="bi bi-geo-alt"></i> ${order.location || 'Не указано'}
-        </div>
-        <div class="order-detail">
-          <i class="bi bi-person"></i> ${order.masterName || 'Мастер не назначен'}
-        </div>
-      </div>
-      <div class="order-footer">
-        <div class="order-price">${order.price ? order.price + ' ₽' : 'Цена не установлена'}</div>
-        <a href="/order/${order.id}" class="btn btn-sm btn-outline-primary">Подробнее</a>
-      </div>
-    </div>
-  `;
-}
-
-// Определение класса статуса заказа
-function getStatusClass(status) {
-  switch (status) {
-    case 'NEW':
-    case 'WAITING_OFFERS':
-    case 'IN_PROGRESS':
-      return 'status-active';
-    case 'COMPLETED':
-      return 'status-completed';
-    case 'CANCELED':
-      return 'status-canceled';
-    default:
-      return '';
-  }
-}
-
-// Определение текста статуса заказа
-function getStatusText(status) {
-  switch (status) {
-    case 'NEW':
-      return 'Новый';
-    case 'WAITING_OFFERS':
-      return 'Ожидает предложений';
-    case 'IN_PROGRESS':
-      return 'В работе';
-    case 'COMPLETED':
-      return 'Завершен';
-    case 'CANCELED':
-      return 'Отменен';
-    default:
-      return 'Неизвестный статус';
-  }
-}
-
 // Инициализация обработчиков событий
 function initEventHandlers() {
-  // Редактирование профиля
-  $('#editProfileBtn').on('click', function() {
-    $('#profileInfo').hide();
-    $('#profileForm').removeClass('d-none');
+  // Редактирование профиля заказчика
+  $('#editProfileBtn-customer').on('click', function() {
+    $('#profileInfo-customer').hide();
+    $('#customerProfileForm').removeClass('d-none');
   });
   
-  $('#cancelEditBtn').on('click', function() {
-    $('#profileForm').addClass('d-none');
-    $('#profileInfo').show();
+  $('#cancelEditBtn-customer').on('click', function() {
+    $('#customerProfileForm').addClass('d-none');
+    $('#profileInfo-customer').show();
+  });
+
+  // Редактирование профиля мастера
+  $('#editProfileBtn-master').on('click', function() {
+    $('#profileInfo-master').hide();
+    $('#masterProfileForm').removeClass('d-none');
+  });
+  
+  $('#cancelEditBtn-master').on('click', function() {
+    $('#masterProfileForm').addClass('d-none');
+    $('#profileInfo-master').show();
+  });
+
+  // Редактирование профиля администратора
+  $('#editProfileBtn-admin').on('click', function() {
+    $('#profileInfo-admin').hide();
+    $('#adminProfileForm').removeClass('d-none');
+  });
+  
+  $('#cancelEditBtn-admin').on('click', function() {
+    $('#adminProfileForm').addClass('d-none');
+    $('#profileInfo-admin').show();
   });
   
   // Отправка формы профиля заказчика
@@ -403,11 +356,6 @@ function initEventHandlers() {
   $('#logoutBtn').on('click', function() {
     logout();
   });
-  
-  // Кнопки создания заказа
-  $('#createOrderBtn, #createOrderBtnEmpty').on('click', function() {
-    window.location.href = '/customers/create-order';
-  });
 }
 
 // Инициализация масок ввода
@@ -434,8 +382,21 @@ function updateProfile(profileData) {
     },
     success: function(response) {
       showSuccess('Профиль успешно обновлен');
+      
+      // Скрываем все формы и показываем информацию профиля
       $('.profile-form').addClass('d-none');
-      $('#profileInfo').show();
+      
+      // Определяем роль пользователя и показываем соответствующий блок
+      const role = response.role || '';
+      if (role === 'CUSTOMER') {
+        $('#profileInfo-customer').show();
+      } else if (role === 'MASTER') {
+        $('#profileInfo-master').show();
+      } else if (role === 'ADMIN') {
+        $('#profileInfo-admin').show();
+      }
+      
+      // Обновляем данные профиля
       displayProfileData(response);
     },
     error: function(xhr) {

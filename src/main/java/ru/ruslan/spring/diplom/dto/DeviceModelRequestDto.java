@@ -4,10 +4,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.ruslan.spring.diplom.enums.DeviceType;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DeviceModelRequestDto {
     @Column(nullable = false)
     @NotBlank

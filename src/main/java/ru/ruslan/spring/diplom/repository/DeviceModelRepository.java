@@ -3,14 +3,16 @@ package ru.ruslan.spring.diplom.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import ru.ruslan.spring.diplom.enums.DeviceType;
 import ru.ruslan.spring.diplom.model.DeviceModel;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface DeviceModelRepository extends JpaRepository<DeviceModel, Long> {
+public interface DeviceModelRepository extends JpaRepository<DeviceModel, Long>, JpaSpecificationExecutor<DeviceModel> {
 
     Optional<DeviceModel> findById(Long id);
 
@@ -24,4 +26,8 @@ public interface DeviceModelRepository extends JpaRepository<DeviceModel, Long> 
     Page<DeviceModel> findByType(DeviceType type, Pageable pageable);
     Page<DeviceModel> findByManufacturer(String manufacturer, Pageable pageable);
     Page<DeviceModel> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    Optional<List<DeviceModel>> findAllByManufacturer(String manufacturer);
+    Optional<List<DeviceModel>> findAllByTypeAndManufacturer(DeviceType type, String manufact);
+    Optional<List<DeviceModel>> findAllByNameIn(List<String> name);
 }

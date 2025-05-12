@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление прошивки - Сервисный центр</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Заголовок страницы / Header -->
+    <div id="headerContainer">
+        <!-- Сюда будет загружен хедер через JavaScript -->
+        <!-- Резервный хедер на случай, если основной не загрузится -->
+        <header class="bg-primary text-white">
+            <div class="container py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h4 mb-0">Сервисный центр</h1>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <!-- Основное содержимое -->
+    <main class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="fw-bold mb-3">Добавление новой прошивки</h1>
+                <p class="text-muted">Заполните необходимую информацию для добавления новой прошивки</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <!-- Форма добавления прошивки -->
+                        <form id="add-firmware-form">
+                            <!-- Основная информация о прошивке -->
+                            <div class="row">
+                                <!-- Название прошивки -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="firmwareName" class="form-label">Название прошивки <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="firmwareName" name="name" required
+                                        placeholder="Например: iOS 15.4.1">
+                                    <div class="invalid-feedback">Пожалуйста, введите название прошивки</div>
+                                </div>
+
+                                <!-- Версия прошивки -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="firmwareVersion" class="form-label">Версия</label>
+                                    <input type="text" class="form-control" id="firmwareVersion" name="version"
+                                        placeholder="Например: 15.4.1">
+                                </div>
+
+                                <!-- Тип устройства -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="deviceType" class="form-label">Тип устройства <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="deviceType" name="deviceType" required>
+                                        <option value="" selected disabled>Выберите тип устройства</option>
+                                        <!-- Опции будут загружены динамически из API -->
+                                    </select>
+                                    <div class="invalid-feedback">Пожалуйста, выберите тип устройства</div>
+                                </div>
+
+                                <!-- Производитель -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="manufacturer" class="form-label">Производитель <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="manufacturer" name="manufacturer" required>
+                                        <option value="" selected disabled>Выберите производителя</option>
+                                        <!-- Опции будут загружены динамически из API -->
+                                    </select>
+                                    <div class="invalid-feedback">Пожалуйста, выберите производителя</div>
+                                </div>
+
+                                <!-- Описание прошивки -->
+                                <div class="col-12 mb-4">
+                                    <label for="description" class="form-label">Описание</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4"
+                                        placeholder="Добавьте описание прошивки, особенности и примечания"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Раздел совместимых устройств -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Совместимые устройства</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <!-- Существующие устройства -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="existingDevice" class="form-label">Выбрать существующее устройство</label>
+                                            <select class="form-select" id="existingDevice">
+                                                <option value="" selected>Выберите устройство</option>
+                                                <!-- Устройства будут загружены из API -->
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-3 d-flex align-items-end">
+                                            <button type="button" id="addExistingDeviceBtn" class="btn btn-outline-primary">
+                                                <i class="bi bi-plus-circle me-2"></i>Добавить устройство
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Список добавленных устройств -->
+                                    <div class="compatible-devices-container mt-3">
+                                        <div id="no-devices-message" class="alert alert-info">
+                                            Совместимые устройства не добавлены
+                                        </div>
+                                        <ul id="compatible-devices-list" class="list-group">
+                                            <!-- Список будет заполнен через JavaScript -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Загрузка файла прошивки -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Файл прошивки <span class="text-danger">*</span></h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="firmwareFile" class="form-label">Выберите файл для загрузки</label>
+                                        <input class="form-control" type="file" id="firmwareFile" name="firmwareFile" required>
+                                        <div class="form-text">Поддерживаемые форматы: ZIP, BIN, IMG, DMG и другие</div>
+                                        <div class="invalid-feedback">Пожалуйста, выберите файл прошивки</div>
+                                    </div>
+                                    <div id="upload-progress" class="progress d-none mt-3">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Кнопки управления -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="/firmwares" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Назад к списку
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-2"></i>Сохранить прошивку
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Индикатор загрузки -->
+                        <div id="loading-indicator" class="text-center py-5 d-none">
+                            <div class="spinner-border text-primary mb-3" role="status">
+                                <span class="visually-hidden">Загрузка...</span>
+                            </div>
+                            <p class="text-muted">Загрузка прошивки, пожалуйста, подождите...</p>
+                        </div>
+
+                        <!-- Сообщение об успехе -->
+                        <div id="success-message" class="text-center py-5 d-none">
+                            <div class="mb-4">
+                                <i class="bi bi-check-circle text-success" style="font-size: 3rem;"></i>
+                            </div>
+                            <h4 class="mb-3">Прошивка успешно добавлена!</h4>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="/firmwares" class="btn btn-outline-primary">
+                                    <i class="bi bi-list me-2"></i>К списку прошивок
+                                </a>
+                                <button id="add-another-firmware" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle me-2"></i>Добавить еще
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Сообщение об ошибке -->
+                        <div id="error-message" class="text-center py-5 d-none">
+                            <div class="mb-4">
+                                <i class="bi bi-x-circle text-danger" style="font-size: 3rem;"></i>
+                            </div>
+                            <h4 class="mb-3">Ошибка при добавлении прошивки</h4>
+                            <p id="error-details" class="text-muted mb-4">Произошла ошибка при добавлении прошивки.</p>
+                            <button id="try-again-btn" class="btn btn-primary">
+                                <i class="bi bi-arrow-clockwise me-2"></i>Попробовать снова
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Скрипты -->
+    <script src="add-firmware.js" type="module"></script>
+</body>
+</html> 

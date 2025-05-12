@@ -2,10 +2,14 @@ package ru.ruslan.spring.diplom.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ruslan.spring.diplom.dto.FirmwareDownloadDto;
-import ru.ruslan.spring.diplom.dto.FirmwareRequestDto;
+import ru.ruslan.spring.diplom.dto.*;
+import ru.ruslan.spring.diplom.enums.DeviceType;
 import ru.ruslan.spring.diplom.model.DeviceModel;
 import ru.ruslan.spring.diplom.model.Firmware;
 import ru.ruslan.spring.diplom.model.MyUser;
@@ -13,6 +17,8 @@ import ru.ruslan.spring.diplom.repository.DeviceModelRepository;
 import ru.ruslan.spring.diplom.repository.FirmwareRepository;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class FirmwareService {
@@ -33,6 +39,59 @@ public class FirmwareService {
         return firmwareRepository.findAll();
     }
 
+        public Page<FirmwareResponseDto> findAllWithFilters(Pageable pageable, String name, DeviceType deviceType, String manufacturer, DeviceModel device, String search){
+            // Начинаем со "спецификации по умолчанию" (пустая — ничего не фильтрует)
+            Specification<Firmware> spec = Specification.where(null);
+
+            if (name != null){
+                spec = spec.and((root, query, cb) -> cb.equal(root.get("name"), name));
+            }
+
+            if (deviceType != null){
+                spec = spec.and((root, query, cb) -> cb.equal(root.get("deviceType"), deviceType));
+            }
+
+            if (manufacturer != null){
+                spec = spec.and((root, query, cb) -> cb.equal(root.get("manufacturer"), manufacturer));
+            }
+
+            if (device != null){
+                spec = spec.and((root, query, cb) -> cb.equal(root.get("compatibleDevices"), device));
+            }
+
+            if (search != null){
+                spec = spec.and((root, query, cb) -> cb.like(root.get("name"), "%" + search + "%"));
+            }
+
+            Page<Firmware> firmwares = firmwareRepository.findAll(spec, pageable);
+
+            Page<FirmwareResponseDto> newFirmwares = firmwares.map(this::toResponse);
+            return newFirmwares;
+        }
+
+
+    private FirmwareResponseDto toResponse(Firmware firmware){
+        List<DeviceModel> deviceModels = firmware.getCompatibleDevices();
+        List<DeviceModelResponseInfoDto> newDeviceModels = deviceModels.stream()
+                .map(deviceModel ->
+                    new DeviceModelResponseInfoDto(deviceModel.getId(),deviceModel.getName(),
+                            deviceModel.getManufacturer(),
+                            deviceModel.getType())
+                )
+                .toList();
+        FirmwareResponseDto newFirmware = new FirmwareResponseDto(firmware.getId(),
+                firmware.getName(),
+                firmware.getDescription(),
+                firmware.getVersion(),
+                firmware.getDeviceType(),
+                firmware.getManufacturer(),
+                firmware.getFileUrl(),
+                newDeviceModels,
+                firmware.getUploadDate(),
+                firmware.getUploadedBy(),
+                firmware.getUpdatedBy());
+        return newFirmware;
+    }
     public Firmware findById(Long id){
         return firmwareRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Нет такой прошивки!"));

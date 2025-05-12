@@ -19,7 +19,7 @@
 @use 'pages/profile';
 @use 'pages/create-order';
 @use 'pages/my-orders';
-@use 'pages/devices';
+
 // Стили для кнопки "Регистрация" в шапке на странице регистрации
 .signup-page-active.signup-btn {
     background-color: $primary !important;
@@ -35,11 +35,14 @@
 body {
   font-family: $font-family-base;
   color: $body-color;
+  overflow-x: hidden;
 }
 
 img {
   max-width: 100%;
 }
+
+// Отступ для страниц теперь определен в header.scss
 
 section {
   padding: 5rem 0;
@@ -47,6 +50,7 @@ section {
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: $headings-font-weight;
+  margin-bottom: 1rem;
 }
 
 .navbar-scrolled {
@@ -80,28 +84,6 @@ h1, h2, h3, h4, h5, h6 {
   --gray-color: #6c757d;
   --border-radius: 0.5rem;
   --transition: all 0.3s ease;
-}
-
-// Общие стили
-body {
-  font-family: 'Inter', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: var(--dark-color);
-  overflow-x: hidden;
-  position: relative;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-}
-
-a {
-  text-decoration: none;
-  color: var(--primary-color);
-  transition: var(--transition);
-  
-  &:hover {
-    color: color.adjust(#0d6efd, $lightness: -10%);
-  }
 }
 
 .btn {

@@ -1,5 +1,6 @@
 package ru.ruslan.spring.diplom.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -40,6 +41,7 @@ public class MyUser {
     private UserRole role;
 
     @Column(nullable = false)
+    @JsonProperty("isActive")
     private boolean isActive = true;
 
     @Column(nullable = false)

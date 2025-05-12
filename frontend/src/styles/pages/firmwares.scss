@@ -1,0 +1,230 @@
+@forward "../variables";
+@forward "../mixins";
+
+.firmwares-catalog-section {
+    padding: 40px 0;
+    
+    .firmware-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+        overflow: hidden;
+        
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+            
+            .view-firmware-btn {
+                background-color: var(--primary-color);
+                color: white;
+            }
+        }
+        
+        .firmware-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .firmware-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+        
+        .firmware-manufacturer {
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .firmware-info {
+            color: var(--gray-color);
+            font-size: 0.875rem;
+            
+            i {
+                color: var(--primary-color);
+            }
+        }
+        
+        .card-footer {
+            padding: 1rem 1.5rem 1.5rem;
+        }
+    }
+    
+    #loading-state {
+        min-height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    #empty-state {
+        min-height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .pagination {
+        .page-item {
+            margin: 0 3px;
+            
+            .page-link {
+                border-radius: 5px;
+                
+                &:focus {
+                    box-shadow: none;
+                }
+            }
+            
+            &.active .page-link {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+        }
+    }
+    
+    #firmware-filter-form {
+        .form-label {
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .form-select, .form-control {
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            
+            &:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+            }
+        }
+        
+        .btn-primary {
+            padding: 0.5rem 1rem;
+            border-radius: 0 5px 5px 0;
+        }
+    }
+}
+
+// Стили для модального окна прошивок
+.modal {
+    .modal-dialog {
+        max-width: 700px;
+    }
+    
+    .modal-content {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modal-header {
+        border-bottom: 1px solid #f1f1f1;
+        padding: 1.25rem 1.5rem;
+        
+        .modal-title {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-footer {
+        border-top: 1px solid #f1f1f1;
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .firmware-detail-info {
+        #firmware-detail-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        
+        .firmware-main-info {
+            border-left: 4px solid var(--primary-color);
+            background-color: #f8f9fa;
+            border-radius: 0 6px 6px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .firmware-info-row {
+            padding: 0.5rem 0;
+            
+            strong {
+                color: var(--dark-color);
+                font-weight: 500;
+            }
+        }
+        
+        .firmware-description {
+            h5 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+                color: var(--dark-color);
+            }
+            
+            p {
+                color: var(--gray-color);
+                font-size: 0.95rem;
+                line-height: 1.6;
+                white-space: pre-line;
+            }
+        }
+        
+        .compatible-devices {
+            h5 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+                color: var(--dark-color);
+            }
+            
+            .list-group {
+                border-radius: 8px;
+                overflow: hidden;
+                
+                .list-group-item {
+                    border-left: none;
+                    border-right: none;
+                    border-color: #f1f1f1;
+                    transition: background-color 0.2s ease;
+                    
+                    &:first-child {
+                        border-top: none;
+                    }
+                    
+                    &:last-child {
+                        border-bottom: none;
+                    }
+                    
+                    &:hover {
+                        background-color: #f8f9fa;
+                    }
+                    
+                    .badge {
+                        font-size: 0.75rem;
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+    }
+    
+    #download-firmware-btn {
+        padding: 0.5rem 1.25rem;
+        font-weight: 500;
+    }
+} 

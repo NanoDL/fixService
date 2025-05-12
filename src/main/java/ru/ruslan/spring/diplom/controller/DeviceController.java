@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.ruslan.spring.diplom.dto.DeviceModelRequestDto;
 import ru.ruslan.spring.diplom.dto.DeviceModelResponseDto;
 import ru.ruslan.spring.diplom.dto.FirmwareRequestDto;
+import ru.ruslan.spring.diplom.dto.FirmwareResponseInfoDto;
 import ru.ruslan.spring.diplom.enums.DeviceType;
 import ru.ruslan.spring.diplom.model.DeviceModel;
 import ru.ruslan.spring.diplom.model.Firmware;
@@ -30,20 +31,23 @@ public class DeviceController {
     }
 
     @GetMapping
-    public Page<DeviceModel> getAllDevices(
+    public Page<DeviceModelResponseDto> getAllDevices(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String manufacturer,
             @RequestParam(required = false) DeviceType type,
             @RequestParam(required = false) String search) {
-        
+        System.out.println(manufacturer + " " + type + " " + search );
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        return deviceModelService.findAllWithFilters(pageable, type, manufacturer, search);
+        Page<DeviceModelResponseDto> pagez = deviceModelService.findAllWithFilters(pageable, type, manufacturer, search);
+        System.out.println(pagez.getContent());
+        return pagez;
     }
 
     @GetMapping("/{id}")
-    public DeviceModel getDeviceById(@PathVariable @Valid Long id){
-        return deviceModelService.findById(id);
+    public DeviceModelResponseDto getDeviceById(@PathVariable @Valid Long id){
+        DeviceModel deviceModel = deviceModelService.findById(id);
+        return deviceModelService.toResponse(deviceModel);
     }
 
     @GetMapping("/types")
@@ -54,6 +58,17 @@ public class DeviceController {
     @GetMapping("/manufacturers")
     public Set<String> getManufacturers() {
         return deviceModelService.findAllManufacturers();
+    }
+
+    @GetMapping("/manufacturers/{manufacturer}")
+    public List<DeviceModel> getDeviceByManufact(@PathVariable String manufacturer){
+        return deviceModelService.findAllByManufacturer(manufacturer);
+    }
+
+    @GetMapping("/type/{type}/manufacturer/{manufact}")
+    public List<DeviceModel> getDeviceByTypeAndManufact(@PathVariable DeviceType type,
+                                                        @PathVariable String manufact){
+        return deviceModelService.findAllByTypeAndManufact(type, manufact);
     }
 
     @PostMapping
@@ -67,8 +82,24 @@ public class DeviceController {
     }
 
     @GetMapping("/{id}/firmwares")
-    public List<Firmware> getFirmwaresForDevice(@PathVariable Long id){
-        return deviceModelService.findFirmwares(id);
+    public List<FirmwareResponseInfoDto> getFirmwaresForDevice(@PathVariable Long id){
+        List<Firmware> firmwares = deviceModelService.findFirmwares(id);
+        return firmwares.stream()
+                .map(firmware -> {
+                    FirmwareResponseInfoDto dto = new FirmwareResponseInfoDto();
+                    dto.setId(firmware.getId());
+                    dto.setName(firmware.getName());
+                    dto.setDescription(firmware.getDescription());
+                    dto.setVersion(firmware.getVersion());
+                    dto.setDeviceType(firmware.getDeviceType());
+                    dto.setManufacturer(firmware.getManufacturer());
+                    dto.setFileUrl(firmware.getFileUrl());
+                    dto.setUploadDate(firmware.getUploadDate());
+                    dto.setUploadedBy(firmware.getUploadedBy());
+                    dto.setUpdatedBy(firmware.getUpdatedBy());
+                    return dto;
+                })
+                .toList();
     }
 
     @PostMapping("/{deviceId}/firmwares/{firmwareId}")

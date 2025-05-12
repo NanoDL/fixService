@@ -17,6 +17,9 @@ const API_CONFIG = {
     orders: '/orders',
     orderById: (id) => `/orders/${id}`,
     orderActions: (id) => `/orders/${id}/actions`,
+
+
+    firmwares: '/firmwares',
     
     // Repair types
     repairTypes: '/repair-types',
