@@ -12,4 +12,6 @@ public class BaseProfileDto {
     private String email;
     private UserRole role;
     private LocalDateTime registrationDate;
+    private LocalDateTime updatedAt;
+    private boolean isActive;
 } 

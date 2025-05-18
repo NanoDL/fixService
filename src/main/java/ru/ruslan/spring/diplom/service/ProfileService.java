@@ -20,11 +20,40 @@ public class ProfileService {
     private final PasswordEncoder passwordEncoder;
 
     public BaseProfileDto getUserProfile(MyUser user) {
-        return switch (user.getRole()) {
-            case CUSTOMER -> mapToCustomerDto(user, findCustomerOrThrow(user));
-            case MASTER -> mapToMasterDto(user, findMasterOrThrow(user));
-            case ADMIN -> mapToAdminDto(user, findAdminOrThrow(user));
-        };
+        BaseProfileDto profileDto;
+        
+        System.out.println("Getting profile for user: " + user.getUsername() + " with role: " + user.getRole());
+        
+        switch (user.getRole()) {
+            case CUSTOMER:
+                Customer customer = findCustomerOrThrow(user);
+                profileDto = mapToCustomerDto(user, customer);
+                break;
+            case MASTER:
+                Master master = findMasterOrThrow(user);
+                System.out.println("Master found: " + master.getName());
+                System.out.println("Address: " + master.getAddress());
+                System.out.println("Phone: " + master.getPhoneNumber());
+                System.out.println("Specialization: " + master.getSpecialization());
+                System.out.println("Experience: " + master.getExperienceYears());
+                System.out.println("Rating: " + master.getRating());
+                System.out.println("Price: " + master.getPrice());
+                System.out.println("Description: " + master.getDescription());
+                System.out.println("Is Available: " + master.isAvailable());
+                
+                profileDto = mapToMasterDto(user, master);
+                break;
+            case ADMIN:
+                Admin admin = findAdminOrThrow(user);
+                profileDto = mapToAdminDto(user, admin);
+                break;
+            default:
+                throw new IllegalStateException("Неизвестная роль пользователя: " + user.getRole());
+        }
+        
+        System.out.println("Profile DTO created: " + profileDto);
+        
+        return profileDto;
     }
     
     @Transactional
@@ -136,6 +165,7 @@ public class ProfileService {
         dto.setRating(master.getRating());
         dto.setPrice(master.getPrice());
         dto.setDescription(master.getDescription());
+        dto.setIsAvailable(master.isAvailable());
         return dto;
     }
 
@@ -155,5 +185,7 @@ public class ProfileService {
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole());
         dto.setRegistrationDate(user.getCreatedAt());
+        dto.setUpdatedAt(user.getUpdatedAt());
+        dto.setActive(user.isActive());
     }
 }

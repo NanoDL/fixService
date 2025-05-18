@@ -145,11 +145,22 @@
     }
     
     .firmware-detail-info {
-        #firmware-detail-name {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--dark-color);
-            margin-bottom: 1rem;
+        .firmware-header {
+            #firmware-detail-name {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--dark-color);
+                margin-bottom: 0.5rem;
+            }
+
+            #firmware-detail-device-type-badge {
+                font-weight: 500;
+                font-size: 0.8rem;
+            }
+
+            #firmware-detail-manufacturer-badge {
+                font-size: 0.9rem;
+            }
         }
         
         .firmware-main-info {
@@ -157,6 +168,10 @@
             background-color: #f8f9fa;
             border-radius: 0 6px 6px 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+
+            i {
+                color: var(--primary-color);
+            }
         }
         
         .firmware-info-row {
@@ -182,6 +197,10 @@
                 line-height: 1.6;
                 white-space: pre-line;
             }
+
+            .bg-light {
+                background-color: #f8f9fa !important;
+            }
         }
         
         .compatible-devices {
@@ -190,6 +209,11 @@
                 font-weight: 600;
                 margin-bottom: 0.75rem;
                 color: var(--dark-color);
+
+                .badge {
+                    font-size: 0.75rem;
+                    vertical-align: middle;
+                }
             }
             
             .list-group {
@@ -197,21 +221,22 @@
                 overflow: hidden;
                 
                 .list-group-item {
-                    border-left: none;
-                    border-right: none;
-                    border-color: #f1f1f1;
                     transition: background-color 0.2s ease;
-                    
-                    &:first-child {
-                        border-top: none;
-                    }
-                    
-                    &:last-child {
-                        border-bottom: none;
-                    }
                     
                     &:hover {
                         background-color: #f8f9fa;
+                    }
+                    
+                    h6 {
+                        font-size: 0.95rem;
+                        font-weight: 600;
+                        color: var(--dark-color);
+                    }
+
+                    small {
+                        display: block;
+                        font-size: 0.8rem;
+                        margin-top: 0.2rem;
                     }
                     
                     .badge {

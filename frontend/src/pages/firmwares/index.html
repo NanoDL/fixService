@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог прошивок - РемонтСервис</title>
+    <title>Каталог прошивок - BitFix</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <!-- Стили будут подключены автоматически через WebPack -->
 </head>
@@ -133,34 +133,51 @@
                 </div>
                 <div class="modal-body">
                     <div class="firmware-detail-info">
-                        <h3 id="firmware-detail-name">Название прошивки</h3>
-                        <div class="firmware-main-info p-3 my-3">
+                        <div class="firmware-header mb-4">
+                            <h3 id="firmware-detail-name" class="fw-bold">Название прошивки</h3>
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-primary me-2" id="firmware-detail-device-type-badge">Тип устройства</span>
+                                <span class="text-muted" id="firmware-detail-manufacturer-badge">Производитель</span>
+                            </div>
+                        </div>
+                        
+                        <div class="firmware-main-info p-3 my-4 rounded">
                             <div class="row">
                                 <div class="col-md-6 firmware-info-row">
-                                    <strong>Версия:</strong> <span id="firmware-detail-version">1.0.0</span>
+                                    <strong><i class="bi bi-tag me-2 text-primary"></i>Версия:</strong> <span id="firmware-detail-version">1.0.0</span>
                                 </div>
                                 <div class="col-md-6 firmware-info-row">
-                                    <strong>Производитель:</strong> <span id="firmware-detail-manufacturer">Производитель</span>
+                                    <strong><i class="bi bi-building me-2 text-primary"></i>Производитель:</strong> <span id="firmware-detail-manufacturer">Производитель</span>
                                 </div>
                                 <div class="col-md-6 firmware-info-row">
-                                    <strong>Тип устройств:</strong> <span id="firmware-detail-device-type">Тип устройства</span>
+                                    <strong><i class="bi bi-device-ssd me-2 text-primary"></i>Тип устройств:</strong> <span id="firmware-detail-device-type">Тип устройства</span>
                                 </div>
                                 <div class="col-md-6 firmware-info-row">
-                                    <strong>Дата добавления:</strong> <span id="firmware-detail-date">01.01.2023</span>
+                                    <strong><i class="bi bi-calendar-date me-2 text-primary"></i>Дата добавления:</strong> <span id="firmware-detail-date">01.01.2023</span>
+                                </div>
+                                <div class="col-md-6 firmware-info-row">
+                                    <strong><i class="bi bi-person me-2 text-primary"></i>Добавил:</strong> <span id="firmware-detail-uploaded-by">Пользователь</span>
+                                </div>
+                                <div class="col-md-6 firmware-info-row">
+                                    <strong><i class="bi bi-file-earmark me-2 text-primary"></i>Файл:</strong> <span id="firmware-detail-file-url">firmware.bin</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="firmware-description my-3">
-                            <h5>Описание</h5>
-                            <p id="firmware-detail-description">Описание прошивки будет здесь.</p>
+                        <div class="firmware-description my-4">
+                            <h5 class="mb-3"><i class="bi bi-card-text me-2 text-primary"></i>Описание</h5>
+                            <div class="p-3 bg-light rounded">
+                                <p id="firmware-detail-description" class="mb-0">Описание прошивки будет здесь.</p>
+                            </div>
                         </div>
                         
-                        <div class="compatible-devices my-3">
-                            <h5>Совместимые устройства</h5>
-                            <ul id="compatible-devices-list" class="list-group">
-                                <!-- Список совместимых устройств будет добавлен через JavaScript -->
-                            </ul>
+                        <div class="compatible-devices my-4">
+                            <h5 class="mb-3"><i class="bi bi-devices me-2 text-primary"></i>Совместимые устройства <span class="badge bg-secondary" id="devices-counter">0</span></h5>
+                            <div class="card">
+                                <ul id="compatible-devices-list" class="list-group list-group-flush">
+                                    <!-- Список совместимых устройств будет добавлен через JavaScript -->
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -180,7 +197,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-brand">
-                        <span class="footer-brand-text">РемонтСервис</span>
+                        <span class="footer-brand-text">BitFix</span>
                     </div>
                     <p class="footer-description">Удобная платформа для поиска квалифицированных мастеров, которые быстро и качественно отремонтируют вашу технику</p>
                     <div class="footer-social">
@@ -226,7 +243,7 @@
             <div class="footer-bottom">
                 <div class="row">
                     <div class="col-md-6">
-                        <p class="copyright">© 2023 РемонтСервис. Все права защищены.</p>
+                        <p class="copyright">© 2023 BitFix. Все права защищены.</p>
                     </div>
                     <div class="col-md-6">
                         <div class="payment-methods text-md-end">

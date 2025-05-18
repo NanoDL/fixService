@@ -47,7 +47,6 @@ public class MyUser {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-
     private LocalDateTime updatedAt;
 
     // Метод для установки времени создания перед персистентностью
@@ -61,7 +60,4 @@ public class MyUser {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
-
-
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>РемонтСервис - Платформа для заказа ремонта техники</title>
+    <title>BitFix - Платформа для заказа ремонта техники</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <!-- Стили будут подключены автоматически через WebPack -->
 </head>
@@ -21,8 +21,8 @@
                     <h1 class="hero-title">Удобный сервис поиска <span class="highlight">мастеров</span> для ремонта техники</h1>
                     <p class="hero-subtitle">Найдите специалиста для ремонта вашего устройства быстро и по доступной цене</p>
                     <div class="hero-buttons">
-                        <a href="/orders" class="btn btn-primary btn-lg me-3">Создать заявку</a>
-                        <a href="/masters" class="btn btn-outline-primary btn-lg">Найти мастера</a>
+                        <a href="/register/customer" class="btn btn-primary btn-lg me-3">Создать заявку</a>
+                       <!-- <a href="/masters" class="btn btn-outline-primary btn-lg">Найти мастера</a>-->
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -119,7 +119,7 @@
                         </div>
                         <div class="process-number">04</div>
                         <h3 class="process-title">Получите результат</h3>
-                        <p class="process-text">Отремонтированное устройство с гарантией и чеком на услуги</p>
+                        <p class="process-text">Отремонтированное устройство</p>
                     </div>
                 </div>
             </div>
@@ -146,7 +146,7 @@
                             <li><i class="bi bi-check-circle"></i> Ремонт после воды</li>
                             <li><i class="bi bi-check-circle"></i> Восстановление данных</li>
                         </ul>
-                        <a href="/services/smartphones" class="btn btn-sm btn-outline-primary w-100">Подробнее</a>
+                        <!--<a href="/services/smartphones" class="btn btn-sm btn-outline-primary w-100">Подробнее</a>-->
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
@@ -161,7 +161,7 @@
                             <li><i class="bi bi-check-circle"></i> Замена термопасты</li>
                             <li><i class="bi bi-check-circle"></i> Установка ПО</li>
                         </ul>
-                        <a href="/services/laptops" class="btn btn-sm btn-outline-primary w-100">Подробнее</a>
+                        <!--<a href="/services/laptops" class="btn btn-sm btn-outline-primary w-100">Подробнее</a>-->
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
@@ -176,13 +176,13 @@
                             <li><i class="bi bi-check-circle"></i> Настройка Smart TV</li>
                             <li><i class="bi bi-check-circle"></i> Обновление ПО</li>
                         </ul>
-                        <a href="/services/tvs" class="btn btn-sm btn-outline-primary w-100">Подробнее</a>
+                        <!--<a href="/services/tvs" class="btn btn-sm btn-outline-primary w-100">Подробнее</a>-->
                     </div>
                 </div>
             </div>
-            <div class="text-center mt-5">
+            <!--<div class="text-center mt-5">
                 <a href="/services" class="btn btn-primary">Смотреть все услуги</a>
-            </div>
+            </div>-->
         </div>
     </section>
 
@@ -255,7 +255,7 @@
     </section> -->
 
     <!-- Гарантии и безопасность -->
-    <section class="guarantees-section py-5">
+    <!--<section class="guarantees-section py-5">
         <div class="container">
             <div class="section-header text-center">
                 <h2 class="section-title">Ваши гарантии</h2>
@@ -291,7 +291,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section>-->
 
     <!-- Присоединяйтесь к нам -->
     <section class="join-section">
@@ -299,14 +299,11 @@
             <div class="join-card">
                 <div class="row align-items-center">
                     <div class="col-lg-7">
-                        <h2 class="join-title">Получите бесплатную консультацию</h2>
-                        <p class="join-text">Оставьте заявку, и мы поможем вам найти оптимальное решение для ремонта вашего устройства по лучшей цене</p>
+                        <h2 class="join-title">Зарегистрируйтесь прямо сейчас</h2>
+                        <p class="join-text">Зарегистрируйтесь на платформе BitFix и получите доступ к услугам квалифицированных мастеров для ремонта вашей техники</p>
                     </div>
-                    <div class="col-lg-5">
-                        <div class="join-buttons">
-                            <a href="/register/customer" class="btn btn-light btn-lg me-3">Создать заявку</a>
-                            <a href="/consultation" class="btn btn-primary btn-lg">Консультация</a>
-                        </div>
+                    <div class="col-lg-5 d-flex justify-content-lg-center align-items-center">
+                        <a href="/register/customer" class="btn btn-light btn-lg ">Зарегистрироваться</a>
                     </div>
                 </div>
             </div>
@@ -319,7 +316,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-brand">
-                        <span class="footer-brand-text">РемонтСервис</span>
+                        <span class="footer-brand-text">BitFix</span>
                     </div>
                     <p class="footer-description">Удобная платформа для поиска квалифицированных мастеров, которые быстро и качественно отремонтируют вашу технику</p>
                     <div class="footer-social">
@@ -365,7 +362,7 @@
             <div class="footer-bottom">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <p class="copyright">© 2023 РемонтСервис. Все права защищены.</p>
+                        <p class="copyright">© 2023 BitFix. Все права защищены.</p>
                     </div>
                     <div class="col-md-6">
                         <div class="footer-payment">

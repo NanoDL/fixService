@@ -50,34 +50,92 @@ export function initProfile() {
 
 // Загрузка данных профиля с сервера
 function loadProfileData() {
-  $.ajax({
-    url: API_CONFIG.getApiUrl('/profile'),
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
-    },
-    crossDomain: true,
-    xhrFields: {
-      withCredentials: true
-    },
-    success: function(response) {
-      displayProfileData(response);
-    },
-    error: function(xhr) {
-      if (xhr.status === 401) {
-        // Неавторизованный доступ
-        window.location.href = '/login';
-      } else {
-        showError('Не удалось загрузить данные профиля');
-      }
-    }
+  // Установим таймаут для обработки случаев, когда API недоступен
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error('Превышено время ожидания')), 5000);
   });
+
+  // Запрос к API
+  const fetchPromise = new Promise((resolve, reject) => {
+    $.ajax({
+      url: API_CONFIG.getApiUrl('/profile'),
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
+      },
+      crossDomain: true,
+      xhrFields: {
+        withCredentials: true
+      },
+      success: function(response) {
+        console.log('Ответ сервера (сырые данные):', response);
+        console.log('Тип ответа:', typeof response);
+        if (typeof response === 'string') {
+          try {
+            response = JSON.parse(response);
+            console.log('Ответ после парсинга:', response);
+          } catch (e) {
+            console.error('Ошибка парсинга JSON:', e);
+          }
+        }
+        resolve(response);
+      },
+      error: function(xhr) {
+        console.error('Ошибка запроса:', xhr);
+        if (xhr.status === 401) {
+          // Неавторизованный доступ
+          window.location.href = '/login';
+        } else {
+          reject(new Error('Не удалось загрузить данные профиля'));
+        }
+      }
+    });
+  });
+
+  // Используем Promise.race чтобы обработать как успешное получение данных, так и таймаут
+  Promise.race([fetchPromise, timeoutPromise])
+    .then(response => {
+      displayProfileData(response);
+    })
+    .catch(error => {
+      console.error('Ошибка загрузки профиля:', error);
+      // Отображаем данные по умолчанию
+      displayDefaultProfileData();
+      showError('Не удалось загрузить данные профиля. Повторите попытку позже.');
+    });
+}
+
+// Отображение данных профиля по умолчанию (запасной вариант)
+function displayDefaultProfileData() {
+  // Определяем текущую роль из localStorage или устанавливаем значение по умолчанию
+  const storedData = JSON.parse(localStorage.getItem('user-data') || '{}');
+  const userRole = storedData.role || 'CUSTOMER';
+  
+  // Показываем блоки в зависимости от роли
+  setupUIForRole(userRole);
+  
+  // Отображаем данные по умолчанию из локального хранилища
+  $('#userName').text(storedData.name || 'Пользователь');
+  $('#userRating').text('0.0');
+  $('#roleBadge').text(getRoleDisplayName(userRole));
+  
+  // Заполнение полей информации в зависимости от роли
+  if (userRole === 'CUSTOMER') {
+    displayCustomerProfile(storedData);
+  } else if (userRole === 'MASTER') {
+    displayMasterProfile(storedData);
+  } else if (userRole === 'ADMIN') {
+    displayAdminProfile(storedData);
+  }
 }
 
 // Отображение данных профиля на странице
 function displayProfileData(data) {
+  console.log('Данные профиля для отображения:', data);
+  
   // Определяем текущую роль пользователя
   const userRole = data.role || '';
+  console.log('Роль пользователя:', userRole);
   
   // Показываем/скрываем блоки в зависимости от роли
   setupUIForRole(userRole);
@@ -146,19 +204,19 @@ function setupUIForRole(role) {
 // Отображение профиля заказчика
 function displayCustomerProfile(data) {
   // Заполнение блока информации профиля
-  $('#profile-tab .customer-specific #fullNameValue').text(`${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Не указано');
-  $('#profile-tab .customer-specific #emailValue').text(data.email || 'Не указан');
-  $('#profile-tab .customer-specific #phoneValue').text(data.phoneNumber || 'Не указан');
-  $('#profile-tab .customer-specific #addressValue').text(data.address || 'Не указан');
-  $('#profile-tab .customer-specific #bioValue').text(data.bio || 'Информация не заполнена');
+  $('#fullNameValue').text(`${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Не указано');
+  $('#emailValue').text(data.email || 'Не указан');
+  $('#phoneValue').text(data.phoneNumber || 'Не указан');
+  $('#addressValue').text(data.address || 'Не указан');
+  $('#bioValue').text(data.bio || 'Информация не заполнена');
   
   // Заполнение полей формы редактирования
-  $('#profile-tab .customer-specific #firstName').val(data.firstName || '');
-  $('#profile-tab .customer-specific #lastName').val(data.lastName || '');
-  $('#profile-tab .customer-specific #email').val(data.email || '');
-  $('#profile-tab .customer-specific #phone').val(data.phoneNumber || '');
-  $('#profile-tab .customer-specific #address').val(data.address || '');
-  $('#profile-tab .customer-specific #bio').val(data.bio || '');
+  $('#firstName').val(data.firstName || '');
+  $('#lastName').val(data.lastName || '');
+  $('#email').val(data.email || '');
+  $('#phone').val(data.phoneNumber || '');
+  $('#address').val(data.address || '');
+  $('#bio').val(data.bio || '');
   
   // Отображение статусов
   updateVerificationStatus(data.isVerified);
@@ -166,25 +224,39 @@ function displayCustomerProfile(data) {
 
 // Отображение профиля мастера
 function displayMasterProfile(data) {
+  // Отладочный вывод полученных данных
+  console.log('Master Profile Data:', data);
+  console.log('Email:', data.email);
+  console.log('Name:', data.name);
+  console.log('Phone:', data.phoneNumber);
+  console.log('Address:', data.address);
+  console.log('Specialization:', data.specialization);
+  console.log('Experience:', data.experienceYears);
+  console.log('Rating:', data.rating);
+  console.log('Price:', data.price);
+  console.log('Description:', data.description);
+  console.log('Is Available:', data.isAvailable);
+
+
   // Заполнение блока информации профиля
-  $('#profile-tab .master-specific #masterNameValue').text(data.name || 'Не указано');
-  $('#profile-tab .master-specific #emailValue').text(data.email || 'Не указан');
-  $('#profile-tab .master-specific #phoneValue').text(data.phoneNumber || 'Не указан');
-  $('#profile-tab .master-specific #addressValue').text(data.address || 'Не указан');
-  $('#profile-tab .master-specific #specializationValue').text(data.specialization || 'Не указана');
-  $('#profile-tab .master-specific #experienceValue').text(data.experienceYears ? `${data.experienceYears} лет` : 'Не указан');
-  $('#profile-tab .master-specific #priceValue').text(data.price ? `от ${data.price} ₽` : 'Не указана');
-  $('#profile-tab .master-specific #descriptionValue').text(data.description || 'Информация не заполнена');
+  $('#masterNameValue').text(data.name || 'Не указано');
+  $('#emailValue').text(data.email || 'Не указан');
+  $('#phoneValue').text(data.phoneNumber || 'Не указан');
+  $('#addressValue').text(data.address || 'Не указан');
+  $('#specializationValue').text(data.specialization || 'Не указана');
+  $('#experienceValue').text(data.experienceYears ? `${data.experienceYears} лет` : 'Не указан');
+  $('#priceValue').text(data.price ? `от ${data.price} ₽` : 'Не указана');
+  $('#descriptionValue').text(data.description || 'Информация не заполнена');
   
   // Заполнение полей формы редактирования
-  $('#profile-tab .master-specific #masterName').val(data.name || '');
-  $('#profile-tab .master-specific #email').val(data.email || '');
-  $('#profile-tab .master-specific #phone').val(data.phoneNumber || '');
-  $('#profile-tab .master-specific #address').val(data.address || '');
-  $('#profile-tab .master-specific #specialization').val(data.specialization || '');
-  $('#profile-tab .master-specific #experience').val(data.experienceYears || '');
-  $('#profile-tab .master-specific #price').val(data.price || '');
-  $('#profile-tab .master-specific #description').val(data.description || '');
+  $('#masterName').val(data.name || '');
+  $('#email').val(data.email || '');
+  $('#phone').val(data.phoneNumber || '');
+  $('#address').val(data.address || '');
+  $('#specialization').val(data.specialization || '');
+  $('#experience').val(data.experienceYears || '');
+  $('#price').val(data.price || '');
+  $('#description').val(data.description || '');
   
   // Обновление рейтинга
   updateMasterRating(data.rating);
@@ -193,15 +265,15 @@ function displayMasterProfile(data) {
 // Отображение профиля администратора
 function displayAdminProfile(data) {
   // Заполнение блока информации профиля
-  $('#profile-tab .admin-specific #fullNameValue').text(`${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Не указано');
-  $('#profile-tab .admin-specific #emailValue').text(data.email || 'Не указан');
-  $('#profile-tab .admin-specific #notesValue').text(data.notes || 'Нет заметок');
+  $('#fullNameValue').text(`${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Не указано');
+  $('#emailValue').text(data.email || 'Не указан');
+  $('#notesValue').text(data.notes || 'Нет заметок');
   
   // Заполнение полей формы редактирования
-  $('#profile-tab .admin-specific #firstName').val(data.firstName || '');
-  $('#profile-tab .admin-specific #lastName').val(data.lastName || '');
-  $('#profile-tab .admin-specific #email').val(data.email || '');
-  $('#profile-tab .admin-specific #notes').val(data.notes || '');
+  $('#firstName').val(data.firstName || '');
+  $('#lastName').val(data.lastName || '');
+  $('#email').val(data.email || '');
+  $('#notes').val(data.notes || '');
   
   // Отображение статуса суперадмина
   if (data.isSuperAdmin) {

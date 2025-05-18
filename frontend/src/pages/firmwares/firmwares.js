@@ -459,7 +459,7 @@ function initModalHandlers() {
         e.preventDefault();
         const firmwareId = this.getAttribute('data-firmware-id');
         if (firmwareId) {
-            window.location.href = API_CONFIG.getApiUrl(`/api/firmwares/${firmwareId}/download`);
+            window.location.href = API_CONFIG.getApiUrl(`/firmwares/${firmwareId}/download`);
         }
     });
 }
@@ -474,11 +474,29 @@ async function openFirmwareDetailsModal(firmwareId) {
         document.getElementById('firmware-detail-version').textContent = firmwareDetails.version || 'Не указана';
         document.getElementById('firmware-detail-manufacturer').textContent = firmwareDetails.manufacturer || 'Не указан';
         document.getElementById('firmware-detail-device-type').textContent = formatDeviceType(firmwareDetails.deviceType);
+        
+        // Добавляем в бейджи в заголовке
+        document.getElementById('firmware-detail-device-type-badge').textContent = formatDeviceType(firmwareDetails.deviceType);
+        document.getElementById('firmware-detail-manufacturer-badge').textContent = firmwareDetails.manufacturer || 'Не указан';
 
         // Форматируем дату
         const uploadDate = firmwareDetails.uploadDate ? new Date(firmwareDetails.uploadDate) : null;
         document.getElementById('firmware-detail-date').textContent = uploadDate ?
             uploadDate.toLocaleDateString('ru-RU') : 'Не указана';
+
+        // Добавляем информацию о пользователе, который загрузил прошивку
+        if (firmwareDetails.uploadedBy) {
+            document.getElementById('firmware-detail-uploaded-by').textContent = 
+                `${firmwareDetails.uploadedBy.firstName || ''} ${firmwareDetails.uploadedBy.lastName || ''}`.trim() || 
+                firmwareDetails.uploadedBy.username || 'Неизвестно';
+        } else {
+            document.getElementById('firmware-detail-uploaded-by').textContent = 'Не указан';
+        }
+
+        // Добавляем информацию о файле
+        const fileName = firmwareDetails.fileUrl ? 
+            firmwareDetails.fileUrl.split('/').pop() : 'firmware.bin';
+        document.getElementById('firmware-detail-file-url').textContent = fileName;
 
         // Описание
         document.getElementById('firmware-detail-description').textContent =
@@ -488,14 +506,30 @@ async function openFirmwareDetailsModal(firmwareId) {
         const devicesList = document.getElementById('compatible-devices-list');
         devicesList.innerHTML = '';
 
+        // Обновляем счетчик устройств
+        const devicesCount = firmwareDetails.compatibleDevices ? firmwareDetails.compatibleDevices.length : 0;
+        document.getElementById('devices-counter').textContent = devicesCount;
+
         if (firmwareDetails.compatibleDevices && firmwareDetails.compatibleDevices.length > 0) {
             firmwareDetails.compatibleDevices.forEach(device => {
                 const deviceItem = document.createElement('li');
                 deviceItem.className = 'list-group-item d-flex justify-content-between align-items-center';
 
-                const deviceName = document.createElement('span');
-                deviceName.textContent = `${device.manufacturer} ${device.model}`;
-                deviceItem.appendChild(deviceName);
+                const deviceInfo = document.createElement('div');
+                
+                const deviceName = document.createElement('h6');
+                deviceName.className = 'mb-0';
+                deviceName.textContent = `${device.manufacturer} ${device.name}`;
+                deviceInfo.appendChild(deviceName);
+                
+                if (device.description) {
+                    const deviceDesc = document.createElement('small');
+                    deviceDesc.className = 'text-muted';
+                    deviceDesc.textContent = device.description;
+                    deviceInfo.appendChild(deviceDesc);
+                }
+                
+                deviceItem.appendChild(deviceInfo);
 
                 const deviceBadge = document.createElement('span');
                 deviceBadge.className = 'badge bg-primary rounded-pill';
@@ -506,8 +540,8 @@ async function openFirmwareDetailsModal(firmwareId) {
             });
         } else {
             const emptyItem = document.createElement('li');
-            emptyItem.className = 'list-group-item text-center text-muted';
-            emptyItem.textContent = 'Нет совместимых устройств';
+            emptyItem.className = 'list-group-item text-center text-muted py-3';
+            emptyItem.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>Нет совместимых устройств';
             devicesList.appendChild(emptyItem);
         }
 
@@ -530,7 +564,7 @@ async function loadFirmwareDetails(firmwareId) {
     const token = localStorage.getItem('jwt-token');
     const headers = token ? {'Authorization': `Bearer ${token}`} : {};
 
-    const response = await fetch(API_CONFIG.getApiUrl(`/api/firmwares/${firmwareId}`), {
+    const response = await fetch(API_CONFIG.getApiUrl(`/firmwares/${firmwareId}`), {
         method: 'GET',
         headers: headers
     });

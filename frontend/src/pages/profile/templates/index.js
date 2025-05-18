@@ -43,11 +43,11 @@ export const customerProfileTemplate = `
         <div id="profileInfo">
             <div class="profile-info-item">
                 <span class="profile-info-label">Полное имя:</span>
-                <span class="profile-info-value" id="fullNameValue">Загрузка...</span>
+                <span class="profile-info-value" id="fullNameValue">Не указано</span>
             </div>
             <div class="profile-info-item">
                 <span class="profile-info-label">Email:</span>
-                <span class="profile-info-value" id="emailValue">Загрузка...</span>
+                <span class="profile-info-value" id="emailValue">Не указан</span>
             </div>
             <div class="profile-info-item">
                 <span class="profile-info-label">Телефон:</span>
@@ -132,7 +132,7 @@ export const masterProfileTemplate = `
 
             <div class="profile-info-item">
                 <span class="profile-info-label">Имя мастера/организации:</span>
-                <span class="profile-info-value" id="masterNameValue">Загрузка...</span>
+                <span class="profile-info-value" id="masterNameValue">Не указано</span>
             </div>
             <div class="profile-info-item">
                 <span class="profile-info-label">Специализация:</span>
@@ -144,7 +144,7 @@ export const masterProfileTemplate = `
             </div>
             <div class="profile-info-item">
                 <span class="profile-info-label">Контактный email:</span>
-                <span class="profile-info-value" id="emailValue">Загрузка...</span>
+                <span class="profile-info-value" id="emailValue">Не указан</span>
             </div>
             <div class="profile-info-item">
                 <span class="profile-info-label">Телефон:</span>
@@ -203,11 +203,11 @@ export const adminProfileTemplate = `
         <div id="profileInfo">
             <div class="profile-info-item">
                 <span class="profile-info-label">Полное имя:</span>
-                <span class="profile-info-value" id="fullNameValue">Загрузка...</span>
+                <span class="profile-info-value" id="fullNameValue">Не указано</span>
             </div>
             <div class="profile-info-item">
                 <span class="profile-info-label">Email:</span>
-                <span class="profile-info-value" id="emailValue">Загрузка...</span>
+                <span class="profile-info-value" id="emailValue">Не указан</span>
             </div>
             <div class="profile-info-item">
                 <span class="profile-info-label">Заметки:</span>
@@ -241,7 +241,7 @@ export const adminUsersTemplate = `
                     <tr>
                         <td colspan="7" class="text-center py-4">
                             <i class="bi bi-people text-muted d-block mb-3" style="font-size: 2rem;"></i>
-                            Загрузка пользователей...
+                            Нет данных о пользователях
                         </td>
                     </tr>
                 </tbody>

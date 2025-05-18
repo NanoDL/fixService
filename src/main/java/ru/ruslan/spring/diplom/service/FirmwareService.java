@@ -27,56 +27,56 @@ public class FirmwareService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public FirmwareService(FirmwareRepository firmwareRepository, 
-                         DeviceModelRepository deviceModelRepository,
-                         ModelMapper modelMapper) {
+    public FirmwareService(FirmwareRepository firmwareRepository,
+                           DeviceModelRepository deviceModelRepository,
+                           ModelMapper modelMapper) {
         this.firmwareRepository = firmwareRepository;
         this.deviceModelRepository = deviceModelRepository;
         this.modelMapper = modelMapper;
     }
 
-    public List<Firmware> getAll(){
+    public List<Firmware> getAll() {
         return firmwareRepository.findAll();
     }
 
-        public Page<FirmwareResponseDto> findAllWithFilters(Pageable pageable, String name, DeviceType deviceType, String manufacturer, DeviceModel device, String search){
-            // Начинаем со "спецификации по умолчанию" (пустая — ничего не фильтрует)
-            Specification<Firmware> spec = Specification.where(null);
+    public Page<FirmwareResponseDto> findAllWithFilters(Pageable pageable, String name, DeviceType deviceType, String manufacturer, DeviceModel device, String search) {
+        // Начинаем со "спецификации по умолчанию" (пустая — ничего не фильтрует)
+        Specification<Firmware> spec = Specification.where(null);
 
-            if (name != null){
-                spec = spec.and((root, query, cb) -> cb.equal(root.get("name"), name));
-            }
-
-            if (deviceType != null){
-                spec = spec.and((root, query, cb) -> cb.equal(root.get("deviceType"), deviceType));
-            }
-
-            if (manufacturer != null){
-                spec = spec.and((root, query, cb) -> cb.equal(root.get("manufacturer"), manufacturer));
-            }
-
-            if (device != null){
-                spec = spec.and((root, query, cb) -> cb.equal(root.get("compatibleDevices"), device));
-            }
-
-            if (search != null){
-                spec = spec.and((root, query, cb) -> cb.like(root.get("name"), "%" + search + "%"));
-            }
-
-            Page<Firmware> firmwares = firmwareRepository.findAll(spec, pageable);
-
-            Page<FirmwareResponseDto> newFirmwares = firmwares.map(this::toResponse);
-            return newFirmwares;
+        if (name != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("name"), name));
         }
 
+        if (deviceType != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("deviceType"), deviceType));
+        }
 
-    private FirmwareResponseDto toResponse(Firmware firmware){
+        if (manufacturer != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("manufacturer"), manufacturer));
+        }
+
+        if (device != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("compatibleDevices"), device));
+        }
+
+        if (search != null) {
+            spec = spec.and((root, query, cb) -> cb.like(root.get("name"), "%" + search + "%"));
+        }
+
+        Page<Firmware> firmwares = firmwareRepository.findAll(spec, pageable);
+
+        Page<FirmwareResponseDto> newFirmwares = firmwares.map(this::toResponse);
+        return newFirmwares;
+    }
+
+
+    private FirmwareResponseDto toResponse(Firmware firmware) {
         List<DeviceModel> deviceModels = firmware.getCompatibleDevices();
         List<DeviceModelResponseInfoDto> newDeviceModels = deviceModels.stream()
                 .map(deviceModel ->
-                    new DeviceModelResponseInfoDto(deviceModel.getId(),deviceModel.getName(),
-                            deviceModel.getManufacturer(),
-                            deviceModel.getType())
+                        new DeviceModelResponseInfoDto(deviceModel.getId(), deviceModel.getName(),
+                                deviceModel.getManufacturer(),
+                                deviceModel.getType())
                 )
                 .toList();
         FirmwareResponseDto newFirmware = new FirmwareResponseDto(firmware.getId(),
@@ -92,20 +92,21 @@ public class FirmwareService {
                 firmware.getUpdatedBy());
         return newFirmware;
     }
-    public Firmware findById(Long id){
+
+    public Firmware findById(Long id) {
         return firmwareRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Нет такой прошивки!"));
     }
 
     @Transactional
-    public Firmware addNew(MyUser user, FirmwareRequestDto dto){
+    public Firmware addNew(MyUser user, FirmwareRequestDto dto) {
         Firmware firmware = modelMapper.map(dto, Firmware.class);
         firmware.setUploadedBy(user);
         return firmwareRepository.save(firmware);
     }
 
     @Transactional
-    public Firmware updateById(MyUser user, Long id, FirmwareRequestDto dto){
+    public Firmware updateById(MyUser user, Long id, FirmwareRequestDto dto) {
         Firmware firmware = findById(id);
         modelMapper.map(dto, firmware);
         firmware.setUpdatedBy(user);
@@ -113,12 +114,12 @@ public class FirmwareService {
     }
 
     @Transactional
-    public void deleteById(Long id){
+    public void deleteById(Long id) {
         Firmware firmware = findById(id);
         firmwareRepository.delete(firmware);
     }
 
-    public FirmwareDownloadDto findFirmForDownload(Long id){
+    public FirmwareDownloadDto findFirmForDownload(Long id) {
         Firmware firmware = findById(id);
         return modelMapper.map(firmware, FirmwareDownloadDto.class);
     }

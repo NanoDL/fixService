@@ -8,6 +8,7 @@ import ru.ruslan.spring.diplom.dto.OrderRequestDto;
 import ru.ruslan.spring.diplom.dto.OrderResponseDto;
 import ru.ruslan.spring.diplom.enums.OrderStatus;
 import ru.ruslan.spring.diplom.enums.UserRole;
+import ru.ruslan.spring.diplom.exception.BadRequestException;
 import ru.ruslan.spring.diplom.model.Customer;
 import ru.ruslan.spring.diplom.model.Master;
 import ru.ruslan.spring.diplom.model.MyUser;
@@ -52,8 +53,12 @@ public class OrderService {
     @Transactional
     public Order acceptOrder(MyUser user, Long id){
         Order order = findById(id);
-        Master master = masterRepository.findByMyUser(user).orElseThrow(()-> new RuntimeException("Нет такого мастера"));
+        Master master = masterRepository.findByMyUser(user).orElseThrow(()-> new BadRequestException("Нет такого мастера"));
 
+        if (order.getStatus() != OrderStatus.NEW){
+            throw new BadRequestException("Заказ уже принят");
+
+        }
         order.setMaster(master);
         order.setStatus(OrderStatus.ACCEPTED);
 

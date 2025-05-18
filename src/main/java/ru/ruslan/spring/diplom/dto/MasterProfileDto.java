@@ -15,4 +15,5 @@ public class MasterProfileDto extends BaseProfileDto {
     private Double rating;
     private BigDecimal price;
     private String description;
+    private Boolean isAvailable;
 } 

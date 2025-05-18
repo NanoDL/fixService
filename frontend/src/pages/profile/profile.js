@@ -37,21 +37,47 @@ async function checkAuth() {
     }
     
     try {
-        const response = await fetch('/api/profile', {
+        // Создаем промис с таймаутом для обработки длительных запросов
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Превышено время ожидания запроса')), 5000);
+        });
+        
+        // Запрос к API
+        const fetchPromise = fetch('/api/profile', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
+        }).then(async response => {
+            if (!response.ok) {
+                throw new Error('Ошибка загрузки профиля');
+            }
+            return response.json();
         });
         
-        if (!response.ok) {
-            throw new Error('Ошибка загрузки профиля');
-        }
+        // Используем Promise.race для обработки как успешного результата, так и таймаута
+        const userData = await Promise.race([fetchPromise, timeoutPromise]);
         
-        const userData = await response.json();
+        // Сохраняем данные пользователя в localStorage для резервного доступа
+        localStorage.setItem('user-data', JSON.stringify(userData));
+        
         setupProfile(userData);
     } catch (error) {
         console.error('Ошибка:', error);
-        window.location.href = '/login';
+        
+        // Пытаемся использовать сохраненные данные при ошибке загрузки
+        const storedUserData = localStorage.getItem('user-data');
+        if (storedUserData) {
+            try {
+                const userData = JSON.parse(storedUserData);
+                setupProfile(userData);
+                // Показываем уведомление о том, что данные могут быть устаревшими
+                showNotification('Отображены сохраненные данные. Некоторая информация может быть неактуальной.', 'warning');
+            } catch (e) {
+                window.location.href = '/login';
+            }
+        } else {
+            window.location.href = '/login';
+        }
     }
 }
 
