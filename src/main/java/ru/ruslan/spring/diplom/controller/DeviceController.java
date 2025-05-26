@@ -8,10 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.ruslan.spring.diplom.dto.DeviceModelRequestDto;
-import ru.ruslan.spring.diplom.dto.DeviceModelResponseDto;
-import ru.ruslan.spring.diplom.dto.FirmwareRequestDto;
-import ru.ruslan.spring.diplom.dto.FirmwareResponseInfoDto;
+import ru.ruslan.spring.diplom.dto.*;
 import ru.ruslan.spring.diplom.enums.DeviceType;
 import ru.ruslan.spring.diplom.model.DeviceModel;
 import ru.ruslan.spring.diplom.model.Firmware;
@@ -30,6 +27,12 @@ public class DeviceController {
         this.deviceModelService = deviceModelService;
     }
 
+
+    @GetMapping("/forclient")
+    public List<DeviceModelResponseInfoDto> getAllDevicesForClient(){
+        return deviceModelService.findAllForClient();
+    }
+
     @GetMapping
     public Page<DeviceModelResponseDto> getAllDevices(
             @RequestParam(defaultValue = "0") int page,
@@ -43,6 +46,8 @@ public class DeviceController {
         System.out.println(pagez.getContent());
         return pagez;
     }
+
+
 
     @GetMapping("/{id}")
     public DeviceModelResponseDto getDeviceById(@PathVariable @Valid Long id){
@@ -61,7 +66,7 @@ public class DeviceController {
     }
 
     @GetMapping("/manufacturers/{manufacturer}")
-    public List<DeviceModel> getDeviceByManufact(@PathVariable String manufacturer){
+    public List<DeviceModelResponseDto> getDeviceByManufact(@PathVariable String manufacturer){
         return deviceModelService.findAllByManufacturer(manufacturer);
     }
 

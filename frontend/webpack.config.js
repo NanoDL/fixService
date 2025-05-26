@@ -94,7 +94,7 @@ module.exports = (env, argv) => {
                     test: /\.(woff|woff2|eot|ttf|otf)$/i,
                     type: 'asset/resource',
                     generator: {
-                        filename: 'fonts/[name][ext]'
+                        filename: 'fonts/[name].[ext]'
                     }
                 },
                 {
@@ -222,6 +222,10 @@ module.exports = (env, argv) => {
                     {
                         from: 'src/components',
                         to: 'components'
+                    },
+                    {
+                        from: 'node_modules/bootstrap-icons/font/fonts',
+                        to: 'assets/fonts'
                     }
                 ],
             }),

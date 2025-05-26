@@ -14,7 +14,7 @@ import java.util.List;
 public class DiplomApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DiplomApplication.class, args);
+         SpringApplication.run(DiplomApplication.class, args);
 
         System.out.println( "Application started" );
 

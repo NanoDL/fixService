@@ -36,6 +36,7 @@ $(document).ready(function() {
     e.preventDefault();
     createOrder();
   });
+
 });
 
 // Инициализация выпадающего списка типов ремонта
@@ -73,7 +74,7 @@ function loadDeviceModels() {
     return;
   }
 
-  fetch(API_CONFIG.getApiUrl('/devices/models'), {
+  fetch(API_CONFIG.getApiUrl('/devices/forclient'), {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -117,20 +118,20 @@ function populateDeviceModels(models) {
   const deviceGroups = {};
   
   models.forEach(model => {
-    const deviceType = model.deviceType || 'Другое';
+    const manufacturer = model.manufacturer || 'Другое';
     
-    if (!deviceGroups[deviceType]) {
-      deviceGroups[deviceType] = [];
+    if (!deviceGroups[manufacturer]) {
+      deviceGroups[manufacturer] = [];
     }
     
-    deviceGroups[deviceType].push(model);
+    deviceGroups[manufacturer].push(model);
   });
   
   // Добавляем опции, сгруппированные по типу устройства
-  Object.keys(deviceGroups).forEach(deviceType => {
-    const optgroup = $('<optgroup>').attr('label', deviceType);
+  Object.keys(deviceGroups).forEach(manufacturer => {
+    const optgroup = $('<optgroup>').attr('label', manufacturer);
     
-    deviceGroups[deviceType].forEach(model => {
+    deviceGroups[manufacturer].forEach(model => {
       optgroup.append($('<option>')
         .val(model.id)
         .text(model.name)
@@ -155,7 +156,7 @@ function createOrder() {
     price: $('#price').val() ? parseFloat($('#price').val()) : null,
     deviceModelId: $('#deviceModelId').val() ? parseInt($('#deviceModelId').val()) : null
   };
-  
+  console.log('Создание заказа:', orderData);
   const token = localStorage.getItem('jwt-token');
   if (!token) {
     console.error('Токен авторизации не найден');

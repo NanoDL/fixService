@@ -210,7 +210,7 @@ function createOrderCard(order, type) {
                     <i class="bi bi-calendar3"></i> ${date}
                 </div>
                 <div class="order-detail">
-                    <i class="bi bi-phone"></i> ${order.deviceModel ? order.deviceModel.name : 'Не указано'}
+                    <i class="bi bi-phone"></i> ${order.device ? order.device.name : 'Не указано'}
                 </div>
                 ${additionalInfo}
             </div>
@@ -314,7 +314,7 @@ function showOrderModal(order) {
     $('#orderModalType').val(order.repairType || 'DIAGNOSTIC');
     
     $('#orderModalDescription').val(order.description || '');
-    $('#orderModalDevice').val(order.deviceModel ? order.deviceModel.name : 'Не указано');
+    $('#orderModalDevice').val(order.device ? order.device.name : 'Не указано');
     $('#orderModalPrice').val(order.price || '');
     
     const creationDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('ru-RU') : 'Не указана';

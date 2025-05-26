@@ -4,12 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ruslan.spring.diplom.dto.DeviceModelRequestDto;
 import ru.ruslan.spring.diplom.dto.DeviceModelResponseDto;
+import ru.ruslan.spring.diplom.dto.DeviceModelResponseInfoDto;
 import ru.ruslan.spring.diplom.dto.FirmwareResponseInfoDto;
 import ru.ruslan.spring.diplom.enums.DeviceType;
 import ru.ruslan.spring.diplom.exception.NotFoundException;
@@ -45,6 +47,20 @@ public class DeviceModelService {
 
     public List<DeviceModel> fildAll(){
         return deviceModelRepository.findAll();
+    }
+
+    public List<DeviceModelResponseInfoDto> findAllForClient() {
+        List<DeviceModel> deviceModels = deviceModelRepository.findAll(Sort.by("name"));
+        return deviceModels.stream().map(deviceModel -> {
+            DeviceModelResponseInfoDto deviceModelResponseInfoDto = new DeviceModelResponseInfoDto();
+            deviceModelResponseInfoDto.setId(deviceModel.getId());
+            deviceModelResponseInfoDto.setName(deviceModel.getName());
+            deviceModelResponseInfoDto.setManufacturer(deviceModel.getManufacturer());
+            if (deviceModel.getType() != null) {
+                deviceModelResponseInfoDto.setType(deviceModel.getType());
+            }
+            return deviceModelResponseInfoDto;
+        }).collect(Collectors.toList());
     }
 
     public Page<DeviceModelResponseDto> findAllWithFilters(Pageable pageable, DeviceType type, String manufacturer, String search) {
@@ -199,8 +215,30 @@ public class DeviceModelService {
                 .orElseThrow(() -> new NotFoundException("Firmware not found for this device"));
     }
 
-    public List<DeviceModel> findAllByManufacturer(String manufacturer) {
-        return deviceModelRepository.findAllByManufacturer(manufacturer).orElseThrow(() -> new RuntimeException("Device not found"));
+    public List<DeviceModelResponseDto> findAllByManufacturer(String manufacturer) {
+        List<DeviceModel> deviceModel = deviceModelRepository.findAllByManufacturer(manufacturer);
+        return deviceModel.stream().map(Model -> {
+            DeviceModelResponseDto deviceModelResponseDto = new DeviceModelResponseDto();
+            deviceModelResponseDto.setId(Model.getId());
+            deviceModelResponseDto.setName(Model.getName());
+            deviceModelResponseDto.setManufacturer(Model.getManufacturer());
+            if (Model.getType() != null) {
+                deviceModelResponseDto.setType(Model.getType().toString());
+            }
+            deviceModelResponseDto.setCompatibleFirmwares(Model.getCompatibleFirmwares().stream()
+                    .map(firmware -> new FirmwareResponseInfoDto(firmware.getId(),
+                            firmware.getName(),
+                            firmware.getDescription(),
+                            firmware.getVersion(),
+                            firmware.getDeviceType(),
+                            firmware.getManufacturer(),
+                            firmware.getFileUrl(),
+                            firmware.getUploadDate(),
+                            firmware.getUploadedBy(),
+                            firmware.getUpdatedBy()))
+                    .collect(Collectors.toList()));
+            return deviceModelResponseDto;
+        }).collect(Collectors.toList());
     }
 
     public List<DeviceModel> findAllByTypeAndManufact(DeviceType type, String manufact) {

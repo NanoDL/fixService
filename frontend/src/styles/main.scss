@@ -1,4 +1,5 @@
 // Главный файл стилей
+
 @use 'sass:color';
 @use 'variables' as *;
 
@@ -19,7 +20,7 @@
 @use 'pages/profile';
 @use 'pages/create-order';
 @use 'pages/my-orders';
-
+@import '~bootstrap-icons/font/bootstrap-icons.css';
 // Стили для кнопки "Регистрация" в шапке на странице регистрации
 .signup-page-active.signup-btn {
     background-color: $primary !important;

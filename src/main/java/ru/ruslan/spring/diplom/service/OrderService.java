@@ -78,7 +78,7 @@ public class OrderService {
             orderResp = modelMapper.map(order, OrderResponseDto.class);
             ordersResp.add(orderResp);
         }
-
+        System.out.println(ordersResp);
         return ordersResp;
     }
 

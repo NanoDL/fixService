@@ -2,6 +2,7 @@ package ru.ruslan.spring.diplom.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,9 @@ public interface DeviceModelRepository extends JpaRepository<DeviceModel, Long>,
     Page<DeviceModel> findByManufacturer(String manufacturer, Pageable pageable);
     Page<DeviceModel> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    Optional<List<DeviceModel>> findAllByManufacturer(String manufacturer);
+List<DeviceModel> findAllByManufacturer(String manufacturer);
     Optional<List<DeviceModel>> findAllByTypeAndManufacturer(DeviceType type, String manufact);
     Optional<List<DeviceModel>> findAllByNameIn(List<String> name);
+
+    List<DeviceModel> findAll(Sort sort);
 }

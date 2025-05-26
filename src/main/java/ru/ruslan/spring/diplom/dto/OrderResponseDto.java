@@ -17,7 +17,7 @@ public class OrderResponseDto {
 
     private Long id;
 
-    private DeviceModel device;
+    private DeviceModelResponseInfoDto device;
 
     private OrderStatus status;
 

@@ -1,12 +1,16 @@
 package ru.ruslan.spring.diplom.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.ruslan.spring.diplom.enums.DeviceType;
 import ru.ruslan.spring.diplom.model.MyUser;
 
 import java.util.Date;
 import java.util.List;
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FirmwareResponseInfoDto {
     private Long id;
 
