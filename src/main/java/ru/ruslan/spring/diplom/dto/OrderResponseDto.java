@@ -17,6 +17,10 @@ public class OrderResponseDto {
 
     private Long id;
 
+    private CustomerResponseInfoDto customer;
+
+    private MasterResponseInfoDto master;
+
     private DeviceModelResponseInfoDto device;
 
     private OrderStatus status;

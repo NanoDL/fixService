@@ -19,8 +19,10 @@ import ru.ruslan.spring.diplom.enums.UserRole;
 import ru.ruslan.spring.diplom.model.*;
 import ru.ruslan.spring.diplom.service.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -98,11 +100,22 @@ public class OrderController {
         @ApiResponse(responseCode = "403", description = "Нет прав для принятия заказа"),
         @ApiResponse(responseCode = "404", description = "Заказ не найден")
     })
-    public Order acceptOrder(@PathVariable Long orderId) {
+    public OrderResponseDto acceptOrder(@PathVariable Long orderId) {
         MyUser currentUser = myUserService.getUserFromContext();
 
         return orderService.acceptOrder(currentUser, orderId);
     }
+
+    @PostMapping("/my/{orderId}/reject-master")
+    public OrderResponseDto rejectMaster(@PathVariable Long orderId){
+        MyUser currentUser = myUserService.getUserFromContext();
+        if (currentUser.getRole() != UserRole.CUSTOMER) {
+            throw new IllegalArgumentException("Только заказчики могут отклонять заказы");
+        }
+        return orderService.rejectMaster(currentUser, orderId);
+
+    }
+
 
     @GetMapping
     public List<OrderResponseDto> getNewOrdersForMaster(){
@@ -140,7 +153,7 @@ public class OrderController {
     }
 
     @GetMapping("/my/{id}")
-    public Order getMyOrder(@PathVariable Long id){
+    public OrderResponseDto getMyOrder(@PathVariable Long id){
         MyUser currentUser = myUserService.getUserFromContext();
 
         return orderService.findOrderByIdAndUser(currentUser, id);
@@ -166,5 +179,33 @@ public class OrderController {
     @PutMapping("/my/{id}")
     public Order updateOrder(@RequestBody @Valid OrderRequestDto dto, @PathVariable Long id){
         return orderService.updateOrder(id, dto);
+    }
+
+    @PatchMapping("/my/{id}/price")
+    public OrderResponseDto updatePrice(@PathVariable Long id, @RequestBody Map<String, BigDecimal> priceMap) {
+        MyUser currentUser = myUserService.getUserFromContext();
+        BigDecimal price = priceMap.get("price");
+        return orderService.updatePrice(currentUser, id, price);
+    }
+
+    @PostMapping("/my/{orderId}/complete")
+    public OrderResponseDto completeOrder(@PathVariable Long orderId){
+        MyUser currentUser = myUserService.getUserFromContext();
+        return orderService.completeOrder(currentUser, orderId);
+    }
+    @PostMapping("/my/{orderId}/start")
+    @Operation(
+            summary = "Запустить заказ в работу",
+            description = "Мастер переводит заказ в статус 'В работе'"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Заказ успешно запущен в работу"),
+            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован"),
+            @ApiResponse(responseCode = "403", description = "Нет прав для изменения статуса заказа"),
+            @ApiResponse(responseCode = "404", description = "Заказ не найден")
+    })
+    public OrderResponseDto startWork(@PathVariable Long orderId){
+        MyUser currentUser = myUserService.getUserFromContext();
+        return orderService.startWork(currentUser, orderId);
     }
 }

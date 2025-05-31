@@ -33,7 +33,7 @@ public class JWTUtil {
     public String generateToken(String username){
         MyUser user = userService.findUserByUsername(username);
 
-        Date expitrationDate = Date.from(ZonedDateTime.now().plusMinutes(5).toInstant());
+        Date expitrationDate = Date.from(ZonedDateTime.now().plusMinutes(60).toInstant());
 
         return JWT.create()
                 .withSubject("User details")

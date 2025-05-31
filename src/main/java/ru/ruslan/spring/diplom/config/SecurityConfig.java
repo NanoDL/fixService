@@ -55,7 +55,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
-                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                     corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
                     corsConfiguration.setExposedHeaders(List.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
                     corsConfiguration.setAllowCredentials(true);
@@ -72,13 +72,6 @@ public class SecurityConfig {
 
                 .anyRequest().authenticated()
             )
-            /*.formLogin(form -> form
-                .loginPage("/login/index.html")
-                .loginProcessingUrl("/login/index.html")
-                .defaultSuccessUrl("/admin/dashboard", true)
-                .permitAll()
-            )*/
-                //.formLogin(Customizer.withDefaults())
 
                 .authenticationProvider(authenticationProvider())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

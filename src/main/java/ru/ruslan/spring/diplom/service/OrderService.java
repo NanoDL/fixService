@@ -18,8 +18,10 @@ import ru.ruslan.spring.diplom.repository.MasterRepository;
 import ru.ruslan.spring.diplom.repository.MyUserRepository;
 import ru.ruslan.spring.diplom.repository.OrderRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class OrderService {
@@ -51,7 +53,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order acceptOrder(MyUser user, Long id){
+    public OrderResponseDto acceptOrder(MyUser user, Long id){
         Order order = findById(id);
         Master master = masterRepository.findByMyUser(user).orElseThrow(()-> new BadRequestException("Нет такого мастера"));
 
@@ -61,10 +63,27 @@ public class OrderService {
         }
         order.setMaster(master);
         order.setStatus(OrderStatus.ACCEPTED);
-
-        return orderRepository.save(order);
+        orderRepository.save(order);
+        OrderResponseDto orderResponseDto = modelMapper.map(order, OrderResponseDto.class);
+        return orderResponseDto;
     }
 
+    @Transactional
+    public OrderResponseDto rejectMaster(MyUser user, Long id){
+
+        Order order = findById(id);
+        if (order.getStatus() != OrderStatus.ACCEPTED) {
+            throw new BadRequestException("Заказ не принят");
+        }
+        if (order.getCustomer().getMyUser().getId() != user.getId()){
+            throw new BadRequestException("Нет прав");
+        }
+        order.setStatus(OrderStatus.NEW);
+        order.setMaster(null);
+        orderRepository.save(order);
+        OrderResponseDto orderResponseDto = modelMapper.map(order, OrderResponseDto.class);
+        return orderResponseDto;
+    }
     public Order findById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Заказ не найден"));
@@ -113,22 +132,25 @@ public class OrderService {
     }
 
 
-    public Order findOrderByIdAndUser(MyUser user, Long id){
+    public OrderResponseDto findOrderByIdAndUser(MyUser user, Long id){
         if (user.getRole() == UserRole.CUSTOMER) {
 
             Customer customer = customerRepository.findByMyUser_Id(user.getId())
                     .orElseThrow(() -> new IllegalArgumentException("Заказчик не найден"));
-
-            return orderRepository.findOrderByIdAndCustomer(id, customer)
+            Order order = orderRepository.findOrderByIdAndCustomer(id, customer)
                     .orElseThrow(() -> new IllegalArgumentException("Заказ не найден"));
+            OrderResponseDto orderResponseDto = modelMapper.map(order, OrderResponseDto.class);
+            System.out.println(orderResponseDto);
+            return orderResponseDto;
 
         } else if (user.getRole() == UserRole.MASTER) {
 
             Master master = masterRepository.findByMyUser_Id(user.getId())
                     .orElseThrow(() -> new IllegalArgumentException("Мастер не найден"));
-
-            return orderRepository.findOrderByIdAndMaster(id, master)
+            Order order = orderRepository.findOrderByIdAndMaster(id, master)
                     .orElseThrow(() -> new IllegalArgumentException("Заказ не найден"));
+            OrderResponseDto orderResponseDto = modelMapper.map(order, OrderResponseDto.class);
+            return orderResponseDto;
 
         } else {
             throw new IllegalArgumentException("У вас нет прав для просмотра заказов");
@@ -165,10 +187,65 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDto updateStatus(MyUser user, Long id, OrderStatus orderStatus){
-        Order order = findOrderByIdAndUser(user, id);
+        Order order = findById(id);
+        if (!Objects.equals(order.getCustomer().getMyUser().getId(), user.getId()) || !Objects.equals(order.getMaster().getMyUser().getId(), user.getId())){
+            throw new BadRequestException("Нет прав");
+        }
         order.setStatus(orderStatus);
 
         return modelMapper.map(order, OrderResponseDto.class);
     }
 
+    @Transactional
+    public OrderResponseDto completeOrder(MyUser user, Long id){
+        Order order = findById(id);
+        if (!Objects.equals(order.getMaster().getMyUser().getId(), user.getId())){
+            throw new BadRequestException("Нет прав");
+        }
+        if (order.getStatus() != OrderStatus.IN_PROGRESS){
+            throw new BadRequestException("Заказ должен быть в статусе 'В работе' для завершения");
+        }
+        order.setStatus(OrderStatus.COMPLETED);
+        orderRepository.save(order);
+        return modelMapper.map(order, OrderResponseDto.class);
+    }
+    /**
+     * Запуск заказа в работу мастером
+     * @param user Пользователь (мастер)
+     * @param id ID заказа
+     * @return Обновленный заказ
+     */
+    @Transactional
+    public OrderResponseDto startWork(MyUser user, Long id) {
+        Order order = findById(id);
+
+        // Проверяем, что заказ в статусе ACCEPTED
+        if (order.getStatus() != OrderStatus.ACCEPTED) {
+            throw new BadRequestException("Заказ должен быть в статусе 'Принят' для запуска в работу");
+        }
+
+        // Проверяем, что пользователь является мастером этого заказа
+        if (order.getMaster() == null || !Objects.equals(order.getMaster().getMyUser().getId(), user.getId())) {
+            throw new BadRequestException("Нет прав для запуска заказа в работу");
+        }
+
+        // Меняем статус на IN_PROGRESS
+        order.setStatus(OrderStatus.IN_PROGRESS);
+        orderRepository.save(order);
+
+        return modelMapper.map(order, OrderResponseDto.class);
+    }
+
+    public OrderResponseDto updatePrice(MyUser currentUser, Long id, BigDecimal price) {
+        Order order = findById(id);
+        if (order.getStatus() != OrderStatus.ACCEPTED) {
+            throw new BadRequestException("Заказ не принят");
+        }
+        if (!Objects.equals(order.getCustomer().getMyUser().getId(), currentUser.getId()) && !Objects.equals(order.getMaster().getMyUser().getId(), currentUser.getId())) {
+            throw new BadRequestException("Нет прав");
+        }
+        order.setPrice(price);
+        orderRepository.save(order);
+        return modelMapper.map(order, OrderResponseDto.class);
+    }
 }

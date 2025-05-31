@@ -178,6 +178,11 @@
   color: $danger;
 }
 
+.status-in-progress {
+  background-color: rgba($warning, 0.1);
+  color: $warning;
+}
+
 // Стили для заглушки пустого списка заказов
 .empty-orders {
   padding: 3rem 1rem;

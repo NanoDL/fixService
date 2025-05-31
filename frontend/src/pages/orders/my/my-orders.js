@@ -1,45 +1,119 @@
 // JavaScript для страницы "Мои заказы"
 import '../../../styles/main.scss';
 import $ from 'jquery';
-import { loadHeader } from '@scripts/common';
-import { initNavigation } from '@scripts/navigation';
-import { isAuthenticated, isCustomer, isMaster } from '@scripts/userUtils';
+import {loadHeader} from '@scripts/common';
+import {initNavigation} from '@scripts/navigation';
+import {isAuthenticated, isCustomer, isMaster} from '@scripts/userUtils';
 import API_CONFIG from '../../../../api.config';
 
 // Инициализация страницы
-$(document).ready(function() {
+$(document).ready(function () {
     // Проверяем авторизацию
     if (!isAuthenticated()) {
         window.location.href = '/login';
         return;
     }
 
-    // Проверяем роль
-    if (!isCustomer() && !isMaster()) {
-        window.location.href = '/profile';
-        return;
-    }
-
     // Загружаем хедер
     loadHeader();
-    
+
     // Инициализируем навигацию
     initNavigation();
-    
+
     // Настраиваем интерфейс в зависимости от роли
     setupUIForRole();
-    
+
     // Загружаем заказы
     loadMyOrders();
-    
+
     // Загружаем доступные заказы (только для мастеров)
     if (isMaster()) {
         loadAvailableOrders();
     }
-    
+
     // Обработчики событий
     initEventHandlers();
+
+    /*// Подключаемся к WebSocket
+    connectWebSocket();*/
 });
+
+// Глобальные переменные для WebSocket
+let stompClient = null;
+let userId = null;
+
+// Инициализация WebSocket соединения
+/*function connectWebSocket() {
+    // Получаем ID пользователя из JWT токена
+    userId = getUserIdFromToken();
+
+    if (!userId) {
+        console.error('Не удалось получить ID пользователя для WebSocket');
+        return;
+    }
+
+    const socket = new SockJS(API_CONFIG.getApiUrl('/ws'));
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function(frame) {
+        console.log('Подключено к WebSocket: ' + frame);
+
+        // Подписываемся на личные уведомления
+        stompClient.subscribe('/topic/user/' + userId, function(notification) {
+            handleNotification(JSON.parse(notification.body));
+        });
+
+        // Подписываемся на глобальные уведомления
+        stompClient.subscribe('/topic/global', function(notification) {
+            handleNotification(JSON.parse(notification.body));
+        });
+    }, function(error) {
+        console.error('Ошибка подключения к WebSocket:', error);
+        // Пробуем переподключиться через 5 секунд
+        setTimeout(connectWebSocket, 5000);
+    });
+}*/
+
+// Обработка входящих уведомлений
+function handleNotification(notification) {
+    console.log('Получено уведомление:', notification);
+
+    // Обрабатываем разные типы уведомлений
+    switch(notification.type) {
+        case 'PRICE_UPDATED':
+            showNotification(notification.message, 'info');
+            // Если мы на странице с заказами, можно обновить данные
+            if (window.location.pathname.includes('/orders/my')) {
+                loadMyOrders();
+            }
+            break;
+        // Другие типы уведомлений...
+        default:
+            showNotification(notification.message, 'info');
+    }
+}
+
+// Получение ID пользователя из JWT токена
+function getUserIdFromToken() {
+    const token = localStorage.getItem('jwt-token');
+    if (!token) return null;
+
+    try {
+        // JWT токен состоит из трех частей, разделенных точкой
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        const payload = JSON.parse(jsonPayload);
+        return payload.id || payload.sub; // ID пользователя обычно хранится в поле 'sub' или 'id'
+    } catch (e) {
+        console.error('Ошибка при декодировании токена:', e);
+        return null;
+    }
+}
+
 
 // Настройка интерфейса в зависимости от роли
 function setupUIForRole() {
@@ -50,7 +124,7 @@ function setupUIForRole() {
         // Показываем кнопку создания заказа в пустом блоке
         $('#createOrderBtn').show();
     }
-    
+
     // Если пользователь - мастер
     if (isMaster()) {
         // Показываем вкладку с доступными заказами
@@ -68,12 +142,12 @@ function loadMyOrders() {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
-        success: function(orders) {
+        success: function (orders) {
             displayMyOrders(orders);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Ошибка при загрузке заказов:', xhr);
-            
+
             if (xhr.status === 401) {
                 // Неавторизованный доступ - перенаправляем на страницу входа
                 window.location.href = '/login';
@@ -93,12 +167,12 @@ function loadAvailableOrders() {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
-        success: function(orders) {
+        success: function (orders) {
             displayAvailableOrders(orders);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Ошибка при загрузке доступных заказов:', xhr);
-            
+
             if (xhr.status === 401) {
                 window.location.href = '/login';
             } else {
@@ -117,14 +191,14 @@ function displayMyOrders(orders) {
         $('#emptyCompletedOrders').show();
         return;
     }
-    
+
     // Разделяем заказы на активные и завершенные
-    const activeOrders = orders.filter(order => 
+    const activeOrders = orders.filter(order =>
         order.status !== 'COMPLETED' && order.status !== 'CANCELED');
-    
-    const completedOrders = orders.filter(order => 
+
+    const completedOrders = orders.filter(order =>
         order.status === 'COMPLETED' || order.status === 'CANCELED');
-    
+
     // Отображаем активные заказы
     if (activeOrders.length > 0) {
         const activeOrdersHtml = activeOrders.map(order => createOrderCard(order, 'active')).join('');
@@ -133,7 +207,7 @@ function displayMyOrders(orders) {
     } else {
         $('#emptyActiveOrders').show();
     }
-    
+
     // Отображаем завершенные заказы
     if (completedOrders.length > 0) {
         const completedOrdersHtml = completedOrders.map(order => createOrderCard(order, 'completed')).join('');
@@ -151,7 +225,7 @@ function displayAvailableOrders(orders) {
         $('#emptyAvailableOrders').show();
         return;
     }
-    
+
     // Отображаем доступные заказы
     const availableOrdersHtml = orders.map(order => createOrderCard(order, 'available')).join('');
     $('#availableOrdersList').html(availableOrdersHtml);
@@ -164,10 +238,10 @@ function createOrderCard(order, type) {
     const statusText = getStatusText(order.status);
     const date = order.createdAt ? new Date(order.createdAt).toLocaleDateString('ru-RU') : 'Не указана';
     const repairTypeDisplayName = getRepairTypeDisplayName(order.repairType);
-    
+
     let additionalInfo = '';
     let buttons = '';
-    
+
     // Разные кнопки для разных типов заказов
     if (type === 'active') {
         buttons = `
@@ -197,7 +271,7 @@ function createOrderCard(order, type) {
             </div>
         `;
     }
-    
+
     return `
         <div class="order-card" data-order-id="${order.id}">
             <div class="order-header">
@@ -232,6 +306,8 @@ function getStatusClass(status) {
             return 'status-new';
         case 'ACCEPTED':
             return 'status-accepted';
+        case 'IN_PROGRESS':
+            return 'status-in-progress';
         case 'COMPLETED':
             return 'status-completed';
         case 'CANCELED':
@@ -248,6 +324,8 @@ function getStatusText(status) {
             return 'Новый';
         case 'ACCEPTED':
             return 'Принят';
+        case 'IN_PROGRESS':
+            return 'В процессе';
         case 'COMPLETED':
             return 'Завершен';
         case 'CANCELED':
@@ -265,13 +343,13 @@ function getOrderDetails(orderId) {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
-        success: function(order) {
+        success: function (order) {
             console.log('Получены данные заказа:', order);
             showOrderModal(order);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Ошибка при получении данных заказа:', xhr);
-            
+
             if (xhr.status === 401) {
                 window.location.href = '/login';
             } else {
@@ -288,15 +366,15 @@ function getOrderDetailsForMaster(orderId) {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
-        success: function (order){
+        success: function (order) {
             console.log('Получены данные заказа:', order);
             showOrderModal(order);
         },
-        error: function (xhr){
+        error: function (xhr) {
             console.error('Ошибка при получении данных заказа:', xhr);
 
-            if(xhr.status === 401) {
-                window.location.href='/login';
+            if (xhr.status === 401) {
+                window.location.href = '/login';
             } else {
                 showError('Не удалось загрузить данные заказа')
             }
@@ -309,29 +387,29 @@ function showOrderModal(order) {
     // Заполняем основные данные
     $('#orderModalTitle').text(`Заказ #${order.id}`);
     $('#orderModalStatus').text(getStatusText(order.status)).attr('class', `order-status ${getStatusClass(order.status)}`);
-    
+
     // Устанавливаем тип ремонта в select
     $('#orderModalType').val(order.repairType || 'DIAGNOSTIC');
-    
+
     $('#orderModalDescription').val(order.description || '');
     $('#orderModalDevice').val(order.device ? order.device.name : 'Не указано');
     $('#orderModalPrice').val(order.price || '');
-    
+
     const creationDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('ru-RU') : 'Не указана';
     $('#orderModalCreationDate').text(creationDate);
-    
+
     // Если есть мастер, отображаем его данные
     if (order.master) {
         $('#orderModalMasterBlock').show();
         $('#orderModalMasterName').text(order.master.name);
-        $('#orderModalMasterContact').text(order.master.phone || order.master.email || 'Не указаны');
+        $('#orderModalMasterContact').text(order.master.phoneNumber || order.master.email || 'Не указаны');
     } else {
         $('#orderModalMasterBlock').hide();
     }
-    
+
     // Показываем/скрываем кнопки в зависимости от статуса заказа и роли пользователя
     setupOrderModalActions(order);
-    
+
     // Открываем модальное окно
     $('#orderDetailsModal').modal('show');
 }
@@ -342,7 +420,7 @@ function setupOrderModalActions(order) {
     $('.order-modal-actions').hide();
     $('#orderModalEditBlock').hide();
     $('#orderModalPriceBlock').hide();
-    
+
     // Действия для заказчика
     if (isCustomer()) {
         if (order.status === 'NEW') {
@@ -359,58 +437,81 @@ function setupOrderModalActions(order) {
             enableOrderEditing(false);
         }
     }
-    
+
     // Действия для мастера
     if (isMaster()) {
-        if (order.status === 'NEW' && !order.master) {
+        if (order.status === 'NEW') {
             // Новый заказ без мастера - можно принять
             $('#orderModalMasterNewActions').show();
-        } else if (order.status === 'ACCEPTED' && order.master) {
-            // Принятый заказ - можно указать цену и завершить
+        } else if (order.status === 'ACCEPTED') {
+            // Принятый заказ - можно указать цену и запустить в работу
             $('#orderModalMasterAcceptedActions').show();
             $('#orderModalPriceBlock').show();
+        } else if (order.status === 'IN_PROGRESS') {
+            // Заказ в работе - можно завершить
+            $('#orderModalMasterInProgressActions').show();
         } else {
             // Завершенный или отмененный заказ - только просмотр
         }
         enableOrderEditing(false);
     }
-    
     // Сохраняем ID заказа в кнопках действий
     $('.order-action-btn').data('order-id', order.id);
     $('#orderModalSaveChangesBtn').data('order-id', order.id);
-    
+
     // Обработка изменений заказа для клиента
     if (isCustomer() && ['NEW', 'REJECTED'].includes(order.status)) {
         const saveChangesBtn = document.getElementById('orderModalSaveChangesBtn');
         const deleteOrderBtn = document.getElementById('deleteOrderBtn');
-        
+
         // Проверяем существование элементов перед работой с ними
         if (saveChangesBtn) {
             saveChangesBtn.classList.remove('d-none');
         }
-        
+
         if (deleteOrderBtn) {
             deleteOrderBtn.classList.remove('d-none');
         }
-        
+
         // Делаем поля редактируемыми (с проверкой существования)
         const orderDescription = document.getElementById('orderModalDescription');
         if (orderDescription) {
             orderDescription.classList.add('form-control-editable');
             orderDescription.readOnly = false;
         }
-        
+
         // Поля orderDeviceType и orderDeviceModel не найдены в HTML, удаляем код работы с ними
-        
+
         // Преобразуем поле типа ремонта в select
         const repairTypeField = document.getElementById('orderModalType'); // Исправлено название поля
         if (repairTypeField) {
             const currentValue = repairTypeField.value;
-            
+
             // При необходимости можем добавить здесь дополнительную логику для работы с select
             // repairTypeField уже является select элементом в HTML
         }
     }
+}
+
+// Запуск заказа в работу мастером
+function startWork(orderId) {
+    $.ajax({
+        url: API_CONFIG.getApiUrl(`/orders/my/${orderId}/start`),
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
+        },
+        success: function (response) {
+            console.log('Заказ успешно запущен в работу:', response);
+            showSuccess('Заказ успешно запущен в работу');
+            $('#orderDetailsModal').modal('hide');
+            loadMyOrders();
+        },
+        error: function (xhr) {
+            console.error('Ошибка при запуске заказа в работу:', xhr);
+            showError('Не удалось запустить заказ в работу');
+        }
+    });
 }
 
 // Включение/отключение редактирования полей заказа
@@ -436,9 +537,9 @@ function saveOrderChanges(orderId, orderData) {
             price: parseFloat(document.getElementById('orderModalPrice')?.value || 0)
         };
     }
-    
+
     console.log('Отправляем данные для обновления заказа:', orderData);
-    
+
     $.ajax({
         url: API_CONFIG.getApiUrl(`/orders/my/${orderId}`),
         method: 'PUT',
@@ -447,13 +548,13 @@ function saveOrderChanges(orderId, orderData) {
         },
         contentType: 'application/json',
         data: JSON.stringify(orderData),
-        success: function(response) {
+        success: function (response) {
             console.log('Заказ успешно обновлен:', response);
             showSuccess('Данные заказа успешно обновлены');
             $('#orderDetailsModal').modal('hide');
             loadMyOrders(); // Перезагружаем список заказов
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Ошибка при обновлении заказа:', xhr);
             console.error('Статус:', xhr.status, 'Ответ:', xhr.responseText);
             showError('Не удалось обновить данные заказа');
@@ -469,13 +570,13 @@ function deleteOrder(orderId) {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
-        success: function(response) {
+        success: function (response) {
             console.log('Заказ успешно удален:', response);
             showSuccess('Заказ успешно удален');
             $('#orderDetailsModal').modal('hide');
             loadMyOrders(); // Перезагружаем список заказов
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Ошибка при удалении заказа:', xhr);
             showError('Не удалось удалить заказ');
         }
@@ -490,13 +591,13 @@ function rejectMaster(orderId) {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
-        success: function(response) {
+        success: function (response) {
             console.log('Отказ от мастера выполнен успешно:', response);
             showSuccess('Вы успешно отказались от услуг мастера');
             $('#orderDetailsModal').modal('hide');
             loadMyOrders(); // Перезагружаем список заказов
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Ошибка при отказе от мастера:', xhr);
             showError('Не удалось выполнить отказ от мастера');
         }
@@ -511,14 +612,14 @@ function acceptOrder(orderId) {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
-        success: function(response) {
+        success: function (response) {
             console.log('Заказ успешно принят:', response);
             showSuccess('Заказ успешно принят');
             $('#orderDetailsModal').modal('hide');
             loadMyOrders();
             loadAvailableOrders();
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Ошибка при принятии заказа:', xhr);
             showError('Не удалось принять заказ');
         }
@@ -528,27 +629,36 @@ function acceptOrder(orderId) {
 // Установка цены мастером
 function setOrderPrice(orderId) {
     const price = $('#orderModalPrice').val();
-    
+
     if (!price || isNaN(parseFloat(price))) {
         showError('Пожалуйста, укажите корректную цену');
         return;
     }
-    
+
     $.ajax({
-        url: API_CONFIG.getApiUrl(`/orders/${orderId}/price`),
-        method: 'POST',
+        url: API_CONFIG.getApiUrl(`/orders/my/${orderId}/price`),
+        method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
         contentType: 'application/json',
-        data: JSON.stringify({ price: parseFloat(price) }),
-        success: function(response) {
+        data: JSON.stringify({price: parseFloat(price)}),
+        success: function (response) {
             console.log('Цена успешно установлена:', response);
+
+            // Показываем уведомление об успехе
             showSuccess('Цена успешно установлена');
+
+            // Отправляем уведомление клиенту (в реальном приложении здесь был бы код для отправки через WebSocket)
+            // Для демонстрации просто показываем уведомление
+
+            showNotification(`Цена для заказа #${orderId} установлена: ${parseFloat(price)} руб.`, 'info');
+
+
             $('#orderDetailsModal').modal('hide');
             loadMyOrders();
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Ошибка при установке цены:', xhr);
             showError('Не удалось установить цену');
         }
@@ -558,18 +668,18 @@ function setOrderPrice(orderId) {
 // Завершение заказа мастером
 function completeOrder(orderId) {
     $.ajax({
-        url: API_CONFIG.getApiUrl(`/orders/${orderId}/complete`),
+        url: API_CONFIG.getApiUrl(`/orders/my/${orderId}/complete`),
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
-        success: function(response) {
+        success: function (response) {
             console.log('Заказ успешно завершен:', response);
             showSuccess('Заказ успешно завершен');
             $('#orderDetailsModal').modal('hide');
             loadMyOrders();
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Ошибка при завершении заказа:', xhr);
             showError('Не удалось завершить заказ');
         }
@@ -579,7 +689,7 @@ function completeOrder(orderId) {
 // Инициализация обработчиков событий
 function initEventHandlers() {
     // Клик по кнопке "Подробнее" для просмотра деталей заказа
-    $(document).on('click', '.view-order-details', function() {
+    $(document).on('click', '.view-order-details', function () {
         const orderId = $(this).data('order-id');
         // Проверяем, на какой вкладке находится пользователь
         // Если на вкладке "Доступные заказы" и пользователь - мастер, используем getOrderDetailsForMaster
@@ -589,21 +699,21 @@ function initEventHandlers() {
             getOrderDetails(orderId);
         }
     });
-    
+
     // Клик по кнопке "Принять заказ" в списке доступных заказов (для мастера)
-    $(document).on('click', '.accept-order-btn', function() {
+    $(document).on('click', '.accept-order-btn', function () {
         const orderId = $(this).data('order-id');
         acceptOrder(orderId);
     });
-    
+
     // Клик по кнопке "Принять заказ" (для мастера)
-    $(document).on('click', '#acceptOrderBtn', function() {
+    $(document).on('click', '#acceptOrderBtn', function () {
         const orderId = $(this).data('order-id');
         acceptOrder(orderId);
     });
-    
+
     // Клик по кнопке "Сохранить изменения" (для заказчика)
-    $(document).on('click', '#orderModalSaveChangesBtn', function() {
+    $(document).on('click', '#orderModalSaveChangesBtn', function () {
         const orderId = $(this).data('order-id');
         if (!orderId) {
             console.error('Не найден ID заказа для кнопки сохранения');
@@ -612,31 +722,37 @@ function initEventHandlers() {
         }
         saveOrderChanges(orderId);
     });
-    
+
     // Клик по кнопке "Удалить заказ" (для заказчика)
-    $(document).on('click', '#deleteOrderBtn', function() {
+    $(document).on('click', '#deleteOrderBtn', function () {
         const orderId = $(this).data('order-id');
         if (confirm('Вы уверены, что хотите удалить заказ? Это действие невозможно отменить.')) {
             deleteOrder(orderId);
         }
     });
-    
+
     // Клик по кнопке "Отказаться от мастера" (для заказчика)
-    $(document).on('click', '#rejectMasterBtn', function() {
+    $(document).on('click', '#rejectMasterBtn', function () {
         const orderId = $(this).data('order-id');
         if (confirm('Вы уверены, что хотите отказаться от услуг текущего мастера?')) {
             rejectMaster(orderId);
         }
     });
-    
+
     // Клик по кнопке "Установить цену" (для мастера)
-    $(document).on('click', '#setOrderPriceBtn', function() {
+    $(document).on('click', '#setOrderPriceBtn', function () {
         const orderId = $(this).data('order-id');
         setOrderPrice(orderId);
     });
-    
+    // Клик по кнопке "Запустить в работу" (для мастера)
+    $(document).on('click', '#startWorkBtn', function () {
+        const orderId = $(this).data('order-id');
+        if (confirm('Вы уверены, что хотите запустить заказ в работу?')) {
+            startWork(orderId);
+        }
+    });
     // Клик по кнопке "Завершить заказ" (для мастера)
-    $(document).on('click', '#completeOrderBtn', function() {
+    $(document).on('click', '#completeOrderBtn', function () {
         const orderId = $(this).data('order-id');
         if (confirm('Вы уверены, что хотите отметить заказ как завершенный?')) {
             completeOrder(orderId);
@@ -653,13 +769,13 @@ function showSuccess(message) {
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     `;
-    
+
     // Добавляем уведомление в контейнер
     $('.my-orders-section .container').prepend(alertHtml);
-    
+
     // Прокрутка страницы к верху для отображения сообщения
     window.scrollTo(0, 0);
-    
+
     // Автоматически скрываем уведомление через 5 секунд
     setTimeout(() => {
         const alertElement = $('.alert');
@@ -678,13 +794,13 @@ function showError(message) {
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     `;
-    
+
     // Добавляем уведомление в контейнер
     $('.my-orders-section .container').prepend(alertHtml);
-    
+
     // Прокрутка страницы к верху для отображения сообщения
     window.scrollTo(0, 0);
-    
+
     // Автоматически скрываем уведомление через 5 секунд
     setTimeout(() => {
         const alertElement = $('.alert');
@@ -714,4 +830,39 @@ function getRepairTypeDisplayName(repairType) {
         default:
             return repairType || 'Не указано';
     }
-} 
+    // Отображение уведомления в правом верхнем углу
+
+}
+function showNotification(message, type) {
+    const notificationArea = document.getElementById('notification-area') || createNotificationArea();
+
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show`;
+    notification.role = 'alert';
+
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+    `;
+
+    notificationArea.appendChild(notification);
+
+    // Автоматическое скрытие уведомления через 3 секунды
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 150);
+    }, 3000);
+}
+
+// Создание области для уведомлений, если она отсутствует
+function createNotificationArea() {
+    const notificationArea = document.createElement('div');
+    notificationArea.id = 'notification-area';
+    notificationArea.className = 'position-fixed top-0 end-0 p-3';
+    notificationArea.style.zIndex = '9999';
+
+    document.body.appendChild(notificationArea);
+    return notificationArea;
+}

@@ -22,14 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Инициализация анимаций
   initAnimations();
 
-  /*// Загрузка списка мастеров
-  loadMasters();
-  
-  // Инициализация фильтров
-  initFilters();
-  
-  // Инициализация поиска
-  initSearch();*/
 });
 
 /**

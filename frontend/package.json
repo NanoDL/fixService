@@ -15,7 +15,9 @@
     "bootstrap": "^5.3.5",
     "bootstrap-icons": "^1.13.1",
     "inputmask": "^5.0.9",
-    "jquery": "^3.7.1"
+    "jquery": "^3.7.1",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
