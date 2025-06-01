@@ -23,7 +23,8 @@ module.exports = (env, argv) => {
             devices: './src/pages/devices/devices.js',
             addDevice: './src/pages/devices/add/add-device.js',
             firmwares: './src/pages/firmwares/firmwares.js',
-            addFirmware: './src/pages/firmwares/add/add-firmware.js'
+            addFirmware: './src/pages/firmwares/add/add-firmware.js',
+            chat: './src/pages/chat/chat.js'
         },
         output: {
             path: path.resolve(__dirname, 'dist'),
@@ -47,6 +48,7 @@ module.exports = (env, argv) => {
                     { from: /^\/orders/, to: '/orders/index.html' },
                     { from: /^\/devices\/add/, to: '/devices/add/index.html' },
                     { from: /^\/devices/, to: '/devices/index.html' },
+                    { from: /^\/chat/, to: '/chat/index.html' },
                     { from: /./, to: '/index.html' },
                     { from: /\/login/, to: '/login/index.html'},
                     { from: /\/profile/, to: '/profile/index.html'},
@@ -207,6 +209,12 @@ module.exports = (env, argv) => {
                 template: './src/pages/firmwares/add/index.html',
                 filename: 'firmwares/add/index.html',
                 chunks: ['addFirmware'],
+                inject: true
+            }),
+            new HtmlWebpackPlugin({
+                template: './src/pages/chat/index.html',
+                filename: 'chat/index.html',
+                chunks: ['chat'],
                 inject: true
             }),
             new CopyWebpackPlugin({

@@ -48,7 +48,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        String[] allowed = {"/v3/api-docs/swagger-config", "/v3/api-docs", "/swagger-ui/**", "/", "/*", "/swApi", "/logout", "/api/auth/**", "/api/devices/forclient/**"};
+        String[] allowed = {"/api/ws/**","/app", "/topic", "/v3/api-docs/swagger-config", "/v3/api-docs", "/swagger-ui/**", "/", "/*", "/swApi", "/logout", "/api/auth/**", "/api/devices/forclient/**"};
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http
 
@@ -68,6 +68,7 @@ public class SecurityConfig {
                     .requestMatchers(allowed).permitAll()
                     .requestMatchers("/api/users").hasRole("ADMIN")
                     .requestMatchers("/api/firmwares/**", "/api/devices/**", "/api/devices").hasAnyRole("MASTER", "ADMIN")
+                    .requestMatchers("/api/chat/**").authenticated()
 
 
                 .anyRequest().authenticated()

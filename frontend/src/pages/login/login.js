@@ -82,7 +82,7 @@ function initFormValidation() {
             
             if (isValid) {
                 // Показываем индикатор загрузки
-                showLoadingIndicator();
+               showLoadingIndicator();
                 
                 // Отправляем форму
                 submitForm();
